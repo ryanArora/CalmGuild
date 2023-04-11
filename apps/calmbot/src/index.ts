@@ -12,10 +12,10 @@ dotenv.config();
 
 invariant(process.env.BOT_TOKEN, "BOT_TOKEN env variable not defined");
 
-const { Guilds, GuildMembers, GuildMessages } = IntentsBitField.Flags;
+const { Guilds, GuildMembers, GuildMessages, MessageContent } = IntentsBitField.Flags;
 
 const client = new Client({
-  intents: [Guilds, GuildMembers, GuildMessages],
+  intents: [Guilds, GuildMembers, GuildMessages, MessageContent],
 });
 
 transformClient(client);
