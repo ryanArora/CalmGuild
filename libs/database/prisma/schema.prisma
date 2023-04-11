@@ -1,0 +1,51 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  discordId                 String   @id @unique
+  minecraftUuid             String?  @unique
+  openTicketChannelId       String?  @unique
+  guildApplicationChannelId String?  @unique
+  timeJoinedWaitlist        BigInt?
+  frozenOnWaitlist          Boolean?
+  informedOnWaitlist        Boolean?
+  username                  String?
+  discriminator             String?
+  accessToken               String?
+  refreshToken              String?
+  tokenExpires              BigInt?
+}
+
+model Guild {
+  guildId              String   @id
+  waitlistJoinMessage  String   @default("You are now on the waitlist")
+  ticketRoleIds        String[]
+  applicationQuestions String[]
+}
+
+enum RoleType {
+  DISCORD_STAFF
+  GUILD_STAFF
+  APPLICATIONS_TEAM
+  WAITLIST
+}
+
+model Role {
+  roleType RoleType @id
+  roleId   String
+}
+
+enum ChannelType {
+  WAITLIST
+}
+
+model Channel {
+  channelType ChannelType @id
+  channelId   String
+}

@@ -1,0 +1,19 @@
+{
+  "name": "database",
+  "private": true,
+  "description": "",
+  "license": "",
+  "scripts": {
+    "db:update": "prisma db push && prisma generate",
+    "db:format": "prisma format"
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "devDependencies": {
+    "prisma": "^4.12.0"
+  },
+  "dependencies": {
+    "@prisma/client": "^4.12.0"
+  }
+}

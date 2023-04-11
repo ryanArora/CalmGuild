@@ -1,0 +1,64 @@
+{
+  "name": "calmbot",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/calmbot/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "platform": "node",
+        "outputPath": "dist/apps/calmbot",
+        "format": ["cjs"],
+        "bundle": false,
+        "main": "apps/calmbot/src/index.ts",
+        "tsConfig": "apps/calmbot/tsconfig.app.json",
+        "assets": ["apps/calmbot/src/assets"],
+        "generatePackageJson": true,
+        "esbuildOptions": {
+          "sourcemap": true,
+          "outExtension": {
+            ".js": ".js"
+          }
+        }
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "esbuildOptions": {
+            "sourcemap": false,
+            "outExtension": {
+              ".js": ".js"
+            }
+          }
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nrwl/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "calmbot:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "calmbot:build:development"
+        },
+        "production": {
+          "buildTarget": "calmbot:build:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/calmbot/**/*.ts"],
+        "fix": true
+      }
+    }
+  },
+  "tags": []
+}
