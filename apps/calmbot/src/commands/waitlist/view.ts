@@ -1,4 +1,4 @@
-import { getNameHistoryFromUUID } from "../../utils/apis/mojang";
+import { getProfileFromUUID } from "../../utils/apis/mojang";
 import { client as database } from "database";
 import { CommandData, escapeMarkdown } from "discord.js";
 
@@ -26,8 +26,8 @@ const command: CommandData = {
     for (const member of waitlistMembers) {
       const position = waitlistMembers.indexOf(member) + 1;
 
-      const nameHistory = member.minecraftUuid ? await getNameHistoryFromUUID(member.minecraftUuid) : null;
-      const name = nameHistory ? nameHistory[nameHistory.length - 1]?.name ?? "Couldn't get name" : "Couldn't get name";
+      const mojangProfile = member.minecraftUuid ? await getProfileFromUUID(member.minecraftUuid) : null;
+      const name = mojangProfile ? mojangProfile.name ?? "Couldn't get name" : "Couldn't get name";
 
       const waitlistSuffixes: string[] = [];
       if (member.informedOnWaitlist) waitlistSuffixes.push("Informed");

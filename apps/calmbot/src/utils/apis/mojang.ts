@@ -23,28 +23,17 @@ export default function getUUIDFromName(name: string): Promise<string | null> {
   });
 }
 
-interface NameHistoryEntry {
+interface MojangProfile {
+  id: string;
   name: string;
-  changedToAt?: number;
 }
 
-const nameHistoryFromUUIDCache: Collection<string, NameHistoryEntry[]> = new Collection();
-
-export const getNameHistoryFromUUID = (uuid: string): Promise<NameHistoryEntry[] | null> => {
+export const getProfileFromUUID = (uuid: string): Promise<MojangProfile | null> => {
   return new Promise((resolve, reject) => {
-    const cached = nameHistoryFromUUIDCache.get(uuid.toLowerCase());
-    if (cached) resolve(cached);
-
     axios
-      .get(`https://api.mojang.com/user/profiles/${uuid}/names`)
+      .get(`https://sessionserver.mojang.com/session/minecraft/profile/${uuid}`)
       .then((res) => {
-        if (res.data !== "" && res.data) {
-          nameHistoryFromUUIDCache.set(uuid, res.data);
-          setTimeout(() => nameHistoryFromUUIDCache.delete(uuid), 1000 * 60 * 15); // 15 minute timeout
-
-          resolve(res.data);
-        }
-        resolve(res.data === "" ? null : res.data);
+        resolve(res.data ?? null);
       })
       .catch(reject);
   });

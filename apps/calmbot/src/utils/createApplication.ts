@@ -1,4 +1,4 @@
-import { getNameHistoryFromUUID } from "./apis/mojang";
+import { getProfileFromUUID } from "./apis/mojang";
 import getRole from "./getRole";
 import { client as database } from "database";
 import { Channel, GuildMember, ActionRowBuilder, ButtonBuilder, EmbedBuilder, OverwriteData, PermissionResolvable, PermissionsBitField, ButtonStyle, MessageActionRowComponentBuilder } from "discord.js";
@@ -17,14 +17,14 @@ export default (member: GuildMember, uuid: string): Promise<Channel> => {
     const applicationsTeam = await getRole("APPLICATIONS_TEAM", member.guild);
     if (applicationsTeam) permissions.push({ id: applicationsTeam, allow: ALLOW_PERMISSIONS });
 
-    const nameHistory = await getNameHistoryFromUUID(uuid);
-    if (!nameHistory) return reject("Couldn't fetch minecraft name");
+    const mojangProfile = await getProfileFromUUID(uuid);
+    if (!mojangProfile) return reject("Couldn't fetch minecraft name");
 
-    const name = nameHistory[nameHistory.length - 1];
+    const name = mojangProfile.name;
 
     member.guild.channels
       .create({
-        name: `app${name ? `-${name.name}` : ""}`,
+        name: `app${name ? `-${name}` : ""}`,
         permissionOverwrites: permissions,
       })
       .then(async (channel) => {
