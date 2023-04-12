@@ -43,6 +43,7 @@ model Role {
 
 enum ChannelType {
   WAITLIST
+  SUGGESTIONS
 }
 
 model Channel {
