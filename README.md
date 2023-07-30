@@ -1,4 +1,4 @@
-# This project is in its extremly early phases and is not meant for production 
+# This project is in its extremely early phases and is not meant for production 
 
 ## Known "issue" - calmbot crashes after build 
 >**Currently after building calmbot, it will not function** due to their being a lack of a "tasks directory" <br>
