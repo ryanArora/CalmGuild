@@ -1,4 +1,4 @@
-import { ButtonInteraction, Client, ContextMenuCommandInteraction, ModalSubmitInteraction, SelectMenuInteraction } from "discord.js";
+import { ButtonInteraction, Client, ContextMenuCommandBuilder, ContextMenuCommandInteraction, ModalSubmitInteraction, SelectMenuInteraction } from "discord.js";
 import fs from "fs";
 import path from "path";
 
@@ -7,10 +7,18 @@ interface RegisteredInteraction<T> {
   validator: (interaction: T) => boolean;
 }
 
+interface RegisteredCommandInteraction<T, B> {
+  execute: (client: Client, interaction: T) => void;
+  data: B; // for the builder (ContextMenuCommandbuilder, SlashCommandBuilder etc)
+}
+
+// Non Commands
 export type RegisteredModalSubmitInteraction = RegisteredInteraction<ModalSubmitInteraction>;
 export type RegisteredSelectMenuInteraction = RegisteredInteraction<SelectMenuInteraction>;
 export type RegisteredButtonInteraction = RegisteredInteraction<ButtonInteraction>;
-export type RegisteredContextMenuInteraction = RegisteredInteraction<ContextMenuCommandInteraction>;
+
+// Commands
+export type RegisteredContextMenuInteraction = RegisteredCommandInteraction<ContextMenuCommandInteraction, ContextMenuCommandBuilder>;
 
 export type PossibleInteraction = RegisteredModalSubmitInteraction | RegisteredSelectMenuInteraction | RegisteredButtonInteraction | RegisteredContextMenuInteraction;
 
@@ -36,14 +44,15 @@ export const registerInteractions = (client: Client, interactionDirectory: strin
         case "buttons":
           client.buttons.push(interaction as RegisteredButtonInteraction);
           break;
-        case "selectMenus":
+        case "selectmenus":
           client.selectMenus.push(interaction as RegisteredSelectMenuInteraction);
           break;
         case "modals":
           client.modals.push(interaction as RegisteredModalSubmitInteraction);
           break;
-        case "contextMenus":
+        case "contextmenus":
           client.contextMenus.push(interaction as RegisteredContextMenuInteraction);
+          break;
       }
     }
   }

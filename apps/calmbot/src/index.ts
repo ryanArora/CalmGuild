@@ -24,6 +24,6 @@ registerCommands(client, path.join(__dirname, "commands"));
 registerEvents(client, path.join(__dirname, "events"));
 registerInteractions(client, path.join(__dirname, "interactions"));
 
-startTasks(client, path.join(__dirname, "tasks"));
+// startTasks(client, path.join(__dirname, "tasks"));
 
 client.login(process.env.BOT_TOKEN);

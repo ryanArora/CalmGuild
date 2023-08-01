@@ -9,6 +9,8 @@ const interactionEvent: Event = {
       client.selectMenus.find((i) => i.validator(interaction))?.execute(client, interaction);
     } else if (interaction.isModalSubmit()) {
       client.modals.find((i) => i.validator(interaction))?.execute(client, interaction);
+    } else if (interaction.isContextMenuCommand()) {
+      client.contextMenus.find((i) => i.data.name === interaction.commandName)?.execute(client, interaction);
     }
   },
   type: "interactionCreate",
