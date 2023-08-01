@@ -1,4 +1,4 @@
-import { ButtonInteraction, Client, ModalSubmitInteraction, SelectMenuInteraction } from "discord.js";
+import { ButtonInteraction, Client, ContextMenuCommandInteraction, ModalSubmitInteraction, SelectMenuInteraction } from "discord.js";
 import fs from "fs";
 import path from "path";
 
@@ -10,8 +10,9 @@ interface RegisteredInteraction<T> {
 export type RegisteredModalSubmitInteraction = RegisteredInteraction<ModalSubmitInteraction>;
 export type RegisteredSelectMenuInteraction = RegisteredInteraction<SelectMenuInteraction>;
 export type RegisteredButtonInteraction = RegisteredInteraction<ButtonInteraction>;
+export type RegisteredContextMenuInteraction = RegisteredInteraction<ContextMenuCommandInteraction>;
 
-export type PossibleInteraction = RegisteredModalSubmitInteraction | RegisteredSelectMenuInteraction | RegisteredButtonInteraction;
+export type PossibleInteraction = RegisteredModalSubmitInteraction | RegisteredSelectMenuInteraction | RegisteredButtonInteraction | RegisteredContextMenuInteraction;
 
 export const registerInteractions = (client: Client, interactionDirectory: string) => {
   const files = fs.readdirSync(interactionDirectory);
@@ -41,6 +42,8 @@ export const registerInteractions = (client: Client, interactionDirectory: strin
         case "modals":
           client.modals.push(interaction as RegisteredModalSubmitInteraction);
           break;
+        case "contextMenus":
+          client.contextMenus.push(interaction as RegisteredContextMenuInteraction);
       }
     }
   }

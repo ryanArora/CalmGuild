@@ -1,5 +1,5 @@
 import { Command } from "./command";
-import { RegisteredButtonInteraction, RegisteredModalSubmitInteraction, RegisteredSelectMenuInteraction } from "./interactions";
+import { RegisteredButtonInteraction, RegisteredContextMenuInteraction, RegisteredModalSubmitInteraction, RegisteredSelectMenuInteraction } from "./interactions";
 import { Client, Collection } from "discord.js";
 
 export interface ClientExtensions {
@@ -8,6 +8,7 @@ export interface ClientExtensions {
   buttons: RegisteredButtonInteraction[];
   selectMenus: RegisteredSelectMenuInteraction[];
   modals: RegisteredModalSubmitInteraction[];
+  contextMenus: RegisteredContextMenuInteraction[];
 }
 
 export const transformClient = (client: Client) => {
@@ -16,6 +17,7 @@ export const transformClient = (client: Client) => {
     buttons: [],
     selectMenus: [],
     modals: [],
+    contextMenus: [],
   };
   Object.assign(client, ext);
 };
