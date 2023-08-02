@@ -1,6 +1,7 @@
-import { EmbedBuilder, GuildMember, TextChannel } from "discord.js";
+import { GuildMember, TextChannel } from "discord.js";
 import { RegisteredModalSubmitInteraction } from "../../client/interactions";
 import getChannel from "../../utils/getChannel";
+import { getSuggestionMessage } from "../../utils/suggestion";
 
 const interaction: RegisteredModalSubmitInteraction = {
   execute: async (client, interaction) => {
@@ -12,12 +13,10 @@ const interaction: RegisteredModalSubmitInteraction = {
     }
 
     const member = interaction.member;
+    if (!(member instanceof GuildMember)) return;
 
-    const suggestion = interaction.fields.getTextInputValue("suggestion");
-    const embed = new EmbedBuilder().setTitle("Suggestion:").setDescription(suggestion).setTimestamp().setColor("#007FFF");
-    if (member instanceof GuildMember) embed.setFooter({ text: member.displayName, iconURL: member.user.displayAvatarURL() });
-
-    suggestionChannel.send({ embeds: [embed] }).then((message) => {
+    const message = getSuggestionMessage(interaction.fields.getTextInputValue("suggestion"), member);
+    suggestionChannel.send(message).then((message) => {
       message.react("✅");
       message.react("❎");
 
