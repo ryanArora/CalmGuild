@@ -4,7 +4,7 @@ import { Collection } from "discord.js";
 const uuidFromNameCache: Collection<string, string> = new Collection();
 
 export default function getUUIDFromName(name: string): Promise<string | null> {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     const cached = uuidFromNameCache.get(name.toLowerCase());
     if (cached) resolve(cached);
 
@@ -19,7 +19,7 @@ export default function getUUIDFromName(name: string): Promise<string | null> {
         }
         resolve(null);
       })
-      .catch(reject);
+      .catch(() => resolve(null));
   });
 }
 
