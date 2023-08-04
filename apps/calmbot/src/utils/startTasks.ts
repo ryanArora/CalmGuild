@@ -27,7 +27,7 @@ export default (client: Client, tasksDir: string) => {
       let date = new Date();
       if (d instanceof Date) date = d;
 
-      if (task.validate(client, date)) task.execute(client, date);
+      if (!task.validate || task.validate(client, date)) task.execute(client, date);
     });
   }
 };

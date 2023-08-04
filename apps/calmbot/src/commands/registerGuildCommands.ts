@@ -5,6 +5,8 @@ import fs from "fs";
 
 const command: CommandData = {
   run: async (client, message) => {
+    if (!message.guild || !client.application) return;
+
     const dir = path.join(__dirname, "../interactions/contextMenus");
     const commands: ContextMenuCommandBuilder[] = [];
 

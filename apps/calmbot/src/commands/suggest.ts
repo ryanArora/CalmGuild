@@ -4,6 +4,8 @@ import { Colors } from "discord.js";
 
 const command: CommandData = {
   run(client, message) {
+    if (!message.guild) return;
+
     const button = new ButtonBuilder().setCustomId("showSuggesitonModal").setLabel("Create Suggestion").setStyle(ButtonStyle.Primary);
     const row = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(button);
 

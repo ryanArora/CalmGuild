@@ -13,7 +13,7 @@ export const editSuggestion = async (message: Message, editor: GuildMember, acti
     if (!message.embeds[0]) return;
     const accept = action === "ACCEPT";
 
-    const newEmbed = new EmbedBuilder(message.embeds[0]).setColor(accept ? "Green" : "Red").setTitle(`Suggestion: ${accept ? "Accepted" : "Denied"}`);
+    const newEmbed = new EmbedBuilder(message.embeds[0].data).setColor(accept ? "Green" : "Red").setTitle(`Suggestion: ${accept ? "Accepted" : "Denied"}`);
 
     const fields: APIEmbedField[] = [{ name: `${accept ? "Accepted" : "Denied"} by:`, value: editor.user.toString(), inline: true }];
 
