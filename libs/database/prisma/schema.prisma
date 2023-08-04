@@ -44,6 +44,7 @@ model Role {
 enum ChannelType {
   WAITLIST
   SUGGESTIONS
+  GUILD_BRIDGE
 }
 
 model Channel {
