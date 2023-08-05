@@ -23,7 +23,7 @@ export default function getUUIDFromName(name: string): Promise<string | null> {
   });
 }
 
-interface MojangProfile {
+export interface MojangProfile {
   id: string;
   name: string;
 }

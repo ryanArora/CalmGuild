@@ -1,4 +1,4 @@
-import { getProfileFromUUID } from "../utils/apis/mojang";
+import getMinecraftProfile from "../utils/getMinecraftProfile";
 import getUserFromInput from "../utils/getUserFromInput";
 import { client as database } from "database";
 import { APIEmbedField, CommandData, EmbedBuilder } from "discord.js";
@@ -19,8 +19,8 @@ const command: CommandData = {
     let minecraftName: string | undefined = undefined;
 
     if (userData && userData.minecraftUuid) {
-      const name = await getProfileFromUUID(userData.minecraftUuid);
-      if (name !== null) minecraftName = name.name;
+      const name = await getMinecraftProfile(userData.minecraftUuid, ["MINECRAFT_UUID"]);
+      if (name) minecraftName = name.name;
     }
 
     const embedFields: APIEmbedField[] = [

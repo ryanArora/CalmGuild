@@ -1,4 +1,4 @@
-import { getProfileFromUUID } from "./apis/mojang";
+import getMinecraftProfile from "./getMinecraftProfile";
 import getRole from "./getRole";
 import { client as database } from "database";
 import { Channel, GuildMember, ActionRowBuilder, ButtonBuilder, EmbedBuilder, OverwriteData, PermissionResolvable, PermissionsBitField, ButtonStyle, MessageActionRowComponentBuilder } from "discord.js";
@@ -17,7 +17,7 @@ export default (member: GuildMember, uuid: string): Promise<Channel> => {
     const applicationsTeam = await getRole("APPLICATIONS_TEAM", member.guild);
     if (applicationsTeam) permissions.push({ id: applicationsTeam, allow: ALLOW_PERMISSIONS });
 
-    const mojangProfile = await getProfileFromUUID(uuid);
+    const mojangProfile = await getMinecraftProfile(uuid, ["MINECRAFT_UUID"]);
     if (!mojangProfile) return reject("Couldn't fetch minecraft name");
 
     const name = mojangProfile.name;

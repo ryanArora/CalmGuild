@@ -1,7 +1,7 @@
 import { getPlayer } from "../utils/apis/hypixel";
-import getUUIDFromName from "../utils/apis/mojang";
 import { client as database } from "database";
 import { CommandData, escapeMarkdown } from "discord.js";
+import getMinecraftProfile from "../utils/getMinecraftProfile";
 
 const command: CommandData = {
   run: async (client, message, args) => {
@@ -15,21 +15,21 @@ const command: CommandData = {
       return;
     }
 
-    const uuid = await getUUIDFromName(args[0]);
-    if (!uuid) {
+    const profile = await getMinecraftProfile(args[0], ["MINECRAFT_USERNAME"]);
+    if (!profile?.id) {
       message.reply("Invalid minecraft name. Please ensure you typed it in correctly.");
       return;
     }
 
     const alreadyExistingUser = await database.user.findFirst({
-      where: { minecraftUuid: uuid },
+      where: { minecraftUuid: profile.id },
     });
     if (alreadyExistingUser) {
       message.reply("A player has already linked to this account, please contact staff if this is an issue.");
       return;
     }
 
-    const hypixelPlayer = await getPlayer(uuid);
+    const hypixelPlayer = await getPlayer(profile.id);
     if (!hypixelPlayer) {
       message.reply("Hypixel has no data for this player, please ensure you typed in the name correctly.");
       return;
@@ -49,8 +49,8 @@ const command: CommandData = {
     database.user
       .upsert({
         where: { discordId: message.author.id },
-        create: { discordId: message.author.id, minecraftUuid: uuid },
-        update: { minecraftUuid: uuid },
+        create: { discordId: message.author.id, minecraftUuid: profile.id },
+        update: { minecraftUuid: profile.id },
       })
       .then(() => {
         message.reply("Account linked!");

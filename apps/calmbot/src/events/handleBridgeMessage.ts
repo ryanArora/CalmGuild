@@ -4,7 +4,7 @@ import getChannel from "../utils/getChannel";
 import { client as database } from "database";
 import { getGuild } from "../utils/apis/hypixel";
 import { sendCommand } from "../utils/apis/minecraftBot";
-import { getProfileFromUUID } from "../utils/apis/mojang";
+import getMinecraftProfile from "../utils/getMinecraftProfile";
 
 const handleBridgeMessage: Event = {
   execute: async (client, message: Message) => {
@@ -21,7 +21,7 @@ const handleBridgeMessage: Event = {
       return;
     }
 
-    const profile = await getProfileFromUUID(user.minecraftUuid);
+    const profile = await getMinecraftProfile(user.minecraftUuid, ["MINECRAFT_UUID"]);
     if (!profile) return;
 
     const characterLimit = 252 - (profile.name.length + 3);

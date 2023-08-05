@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import getUUIDFromName from "./apis/mojang";
+import getMinecraftProfile from "./getMinecraftProfile";
 import isProperId from "./regex/isProperId";
 import isProperMinecraftUsername from "./regex/isProperMinecraftUsername";
 import { client as database } from "database";
@@ -21,10 +21,10 @@ export default (client: Client, input: string, allowedInputTypes: InputTypes[] =
     }
 
     if (allowedInputTypes.includes("MINECRAFT_USERNAME") && isProperMinecraftUsername(input)) {
-      const uuid = await getUUIDFromName(input).catch(() => {});
-      if (uuid) {
+      const profile = await getMinecraftProfile(input, ["MINECRAFT_USERNAME"]).catch(() => {});
+      if (profile?.id) {
         const userData = await database.user.findFirst({
-          where: { minecraftUuid: uuid },
+          where: { minecraftUuid: profile.id },
           select: { discordId: true },
         });
         if (userData) {

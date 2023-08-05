@@ -1,6 +1,6 @@
-import { getProfileFromUUID } from "../../utils/apis/mojang";
 import { client as database } from "database";
 import { CommandData, escapeMarkdown } from "discord.js";
+import getMinecraftProfile from "../../utils/getMinecraftProfile";
 
 const command: CommandData = {
   run: async (client, message) => {
@@ -26,7 +26,7 @@ const command: CommandData = {
     for (const member of waitlistMembers) {
       const position = waitlistMembers.indexOf(member) + 1;
 
-      const mojangProfile = member.minecraftUuid ? await getProfileFromUUID(member.minecraftUuid) : null;
+      const mojangProfile = member.minecraftUuid ? await getMinecraftProfile(member.minecraftUuid, ["MINECRAFT_UUID"]) : null;
       const name = mojangProfile ? mojangProfile.name ?? "Couldn't get name" : "Couldn't get name";
 
       const waitlistSuffixes: string[] = [];
