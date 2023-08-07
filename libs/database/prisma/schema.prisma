@@ -23,12 +23,23 @@ model User {
 }
 
 model Guild {
-  guildId              String    @id
-  waitlistJoinMessage  String    @default("You are now on the waitlist")
+  guildId              String              @id
+  waitlistJoinMessage  String              @default("You are now on the waitlist")
   ticketRoleIds        String[]
   applicationQuestions String[]
   channels             Channel[]
   roles                Role[]
+  skullboardMessages   SkullboardMessage[]
+}
+
+model SkullboardMessage {
+  guildId String
+  guild   Guild  @relation(fields: [guildId], references: [guildId])
+
+  originalMessageId   String @unique
+  skullboardMessageId String @unique
+
+  @@id([guildId, originalMessageId])
 }
 
 enum RoleType {
@@ -52,6 +63,7 @@ enum ChannelType {
   WAITLIST
   SUGGESTIONS
   GUILD_BRIDGE
+  SKULLBOARD
 }
 
 model Channel {
