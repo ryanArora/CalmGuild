@@ -7,6 +7,7 @@ export default (roleType: RoleType, guild: Guild): Promise<Role | undefined> => 
     const roleData = await database.role.findFirst({
       where: {
         roleType: roleType,
+        guildId: guild.id,
       },
       select: {
         roleId: true,

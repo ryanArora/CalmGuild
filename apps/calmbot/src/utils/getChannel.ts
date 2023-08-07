@@ -7,6 +7,7 @@ export default (channelType: ChannelType, guild: Guild): Promise<Channel | undef
     const channelData = await database.channel.findFirst({
       where: {
         channelType: channelType,
+        guildId: guild.id,
       },
       select: {
         channelId: true,
