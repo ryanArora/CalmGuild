@@ -2,6 +2,7 @@ import getUserFromInput from "../utils/getUserFromInput";
 import { client as database } from "database";
 import { CommandData } from "discord.js";
 import getMinecraftProfile from "../utils/getMinecraftProfile";
+import linkUser from "../utils/database/linkUser";
 
 const command: CommandData = {
   run: async (client, message, args) => {
@@ -35,12 +36,7 @@ const command: CommandData = {
       return;
     }
 
-    database.user
-      .upsert({
-        where: { discordId: discordUser.id },
-        create: { discordId: discordUser.id, minecraftUuid: minecraftProfile.id },
-        update: { minecraftUuid: minecraftProfile.id },
-      })
+    linkUser(discordUser.id, minecraftProfile.id, message.guild.id)
       .then(() => {
         message.reply("Account linked!");
       })

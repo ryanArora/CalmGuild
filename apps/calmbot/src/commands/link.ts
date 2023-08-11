@@ -2,10 +2,12 @@ import { getPlayer } from "../utils/apis/hypixel";
 import { client as database } from "database";
 import { CommandData, escapeMarkdown } from "discord.js";
 import getMinecraftProfile from "../utils/getMinecraftProfile";
+import linkUser from "../utils/database/linkUser";
 
 const command: CommandData = {
   run: async (client, message, args) => {
     if (!message.guild || !args[0]) return;
+    const guildId = message.guild.id;
 
     const user = await database.user.findFirst({
       where: { discordId: message.author.id },
@@ -46,15 +48,9 @@ const command: CommandData = {
       return;
     }
 
-    database.user
-      .upsert({
-        where: { discordId: message.author.id },
-        create: { discordId: message.author.id, minecraftUuid: profile.id },
-        update: { minecraftUuid: profile.id },
-      })
-      .then(() => {
-        message.reply("Account linked!");
-      })
+    // Create or Update user if the user doesn't exust; then, make sure there is a Member linked to that User
+    linkUser(message.author.id, profile.id, guildId)
+      .then(() => message.reply("Linked"))
       .catch((err) => {
         console.error(err);
         message.reply("Account linking failed! Please report this to staff.");
