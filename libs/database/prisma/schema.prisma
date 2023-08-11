@@ -8,28 +8,43 @@ generator client {
 }
 
 model User {
-  discordId                 String   @id @unique
-  minecraftUuid             String?  @unique
+  discordId     String  @id @unique
+  minecraftUuid String? @unique
+  username      String?
+  discriminator String?
+  accessToken   String?
+  refreshToken  String?
+  tokenExpires  BigInt?
+
+  members Member[]
+}
+
+model Member {
+  guildId String
+  guild   Guild  @relation(fields: [guildId], references: [guildId])
+
+  discordId String
+  user      User   @relation(fields: [discordId], references: [discordId])
+
   openTicketChannelId       String?  @unique
   guildApplicationChannelId String?  @unique
   timeJoinedWaitlist        BigInt?
   frozenOnWaitlist          Boolean?
   informedOnWaitlist        Boolean?
-  username                  String?
-  discriminator             String?
-  accessToken               String?
-  refreshToken              String?
-  tokenExpires              BigInt?
+
+  @@id([guildId, discordId])
 }
 
 model Guild {
-  guildId              String              @id
-  waitlistJoinMessage  String              @default("You are now on the waitlist")
+  guildId              String   @id
+  waitlistJoinMessage  String   @default("You are now on the waitlist")
   ticketRoleIds        String[]
   applicationQuestions String[]
-  channels             Channel[]
-  roles                Role[]
-  skullboardMessages   SkullboardMessage[]
+
+  members            Member[]
+  channels           Channel[]
+  roles              Role[]
+  skullboardMessages SkullboardMessage[]
 }
 
 model SkullboardMessage {
