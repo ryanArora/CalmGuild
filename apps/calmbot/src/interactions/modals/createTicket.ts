@@ -39,8 +39,8 @@ const interaction: RegisteredModalSubmitInteraction = {
         permissionOverwrites: permissions,
       })
       .then(async (ticketChannel) => {
-        await database.user.update({
-          where: { discordId: interaction.user.id },
+        await database.member.update({
+          where: { guildId_discordId: { discordId: interaction.user.id, guildId: ticketChannel.guildId } },
           data: { openTicketChannelId: ticketChannel.id },
         });
 

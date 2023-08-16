@@ -6,9 +6,11 @@ const command: CommandData = {
   run: async (client, message) => {
     if (!message.guild) return;
 
-    const waitlistMembers = await database.user.findMany({
+    const waitlistMembers = await database.member.findMany({
       where: { timeJoinedWaitlist: { not: null } },
+      select: { timeJoinedWaitlist: true, informedOnWaitlist: true, frozenOnWaitlist: true, user: { select: { minecraftUuid: true } } },
     });
+
     if (waitlistMembers.length === 0) {
       message.reply("No members on waitlist");
       return;
@@ -26,7 +28,7 @@ const command: CommandData = {
     for (const member of waitlistMembers) {
       const position = waitlistMembers.indexOf(member) + 1;
 
-      const mojangProfile = member.minecraftUuid ? await getMinecraftProfile(member.minecraftUuid, ["MINECRAFT_UUID"]) : null;
+      const mojangProfile = member.user.minecraftUuid ? await getMinecraftProfile(member.user.minecraftUuid, ["MINECRAFT_UUID"]) : null;
       const name = mojangProfile ? mojangProfile.name ?? "Couldn't get name" : "Couldn't get name";
 
       const waitlistSuffixes: string[] = [];

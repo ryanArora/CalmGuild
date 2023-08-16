@@ -4,11 +4,13 @@ import { Colors, EmbedBuilder } from "discord.js";
 
 const interaction: RegisteredModalSubmitInteraction = {
   execute: async (client, interaction) => {
+    if (!interaction.guild) return;
+
     const memberId = interaction.customId.split("_")[1];
     if (!memberId) return interaction.reply("Error");
 
-    await database.user.update({
-      where: { discordId: memberId },
+    await database.member.update({
+      where: { guildId_discordId: { discordId: memberId, guildId: interaction.guild.id } },
       data: { guildApplicationChannelId: null },
     });
 

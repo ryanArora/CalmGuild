@@ -1,6 +1,7 @@
 import getUserFromInput from "../../utils/getUserFromInput";
 import { client as database } from "database";
 import { CommandData } from "discord.js";
+import findOrCreateMemberArgs from "../../utils/database/findOrCreateMemberArgs";
 
 const command: CommandData = {
   run: async (client, message, args) => {
@@ -12,20 +13,19 @@ const command: CommandData = {
       return;
     }
 
-    const userData = await database.user.findFirst({
-      where: { discordId: user.id },
-      select: { timeJoinedWaitlist: true, informedOnWaitlist: true },
-    });
-    if (!userData || !userData.timeJoinedWaitlist) {
+    const data = await database.user.upsert({ ...findOrCreateMemberArgs(user.id, message.guild.id), select: { members: { select: { timeJoinedWaitlist: true, informedOnWaitlist: true, discordId: true } } } });
+    const memberData = data.members.find((member) => member.discordId === user.id);
+
+    if (!memberData || !memberData.timeJoinedWaitlist) {
       message.reply("User not on waitlist");
       return;
     }
 
-    await database.user.update({
-      where: { discordId: user.id },
-      data: { informedOnWaitlist: !userData.informedOnWaitlist },
+    await database.member.update({
+      where: { guildId_discordId: { discordId: user.id, guildId: message.guild.id } },
+      data: { informedOnWaitlist: !memberData.informedOnWaitlist },
     });
-    message.reply(`User ${userData.informedOnWaitlist ? "un" : ""}informed`);
+    message.reply(`User ${memberData.informedOnWaitlist ? "un" : ""}informed`);
   },
   requiredPermission: "STAFF",
   minimumArguments: 1,

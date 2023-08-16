@@ -1,3 +1,4 @@
+import findOrCreateMemberArgs from "../../utils/database/findOrCreateMemberArgs";
 import getRole from "../../utils/getRole";
 import getUserFromInput from "../../utils/getUserFromInput";
 import { client as database } from "database";
@@ -13,17 +14,15 @@ const command: CommandData = {
       return;
     }
 
-    const userData = await database.user.findFirst({
-      where: { discordId: user.id },
-      select: { timeJoinedWaitlist: true },
-    });
-    if (!userData || !userData.timeJoinedWaitlist) {
+    const data = await database.user.upsert({ ...findOrCreateMemberArgs(user.id, message.guild.id), select: { members: { select: { timeJoinedWaitlist: true, discordId: true } } } });
+    const memberData = data.members.find((member) => member.discordId === user.id);
+    if (!memberData || !memberData.timeJoinedWaitlist) {
       message.reply("User not on waitlist");
       return;
     }
 
-    await database.user.update({
-      where: { discordId: user.id },
+    await database.member.update({
+      where: { guildId_discordId: { discordId: user.id, guildId: message.guild.id } },
       data: {
         timeJoinedWaitlist: null,
         informedOnWaitlist: null,

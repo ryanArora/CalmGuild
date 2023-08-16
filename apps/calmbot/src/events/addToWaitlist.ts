@@ -16,8 +16,8 @@ const addToWaitlist: Event = {
 
     // waitlist role added
     if (newRoles.has(waitlistRole.id) && !oldRoles.has(waitlistRole.id)) {
-      await database.user.update({
-        where: { discordId: newMember.id },
+      await database.member.update({
+        where: { guildId_discordId: { discordId: newMember.id, guildId: newMember.guild.id } },
         data: {
           timeJoinedWaitlist: Date.now(),
           informedOnWaitlist: null,
@@ -39,8 +39,8 @@ const addToWaitlist: Event = {
 
     // waitlist role removed
     else if (oldRoles.has(waitlistRole.id) && !newRoles.has(waitlistRole.id)) {
-      await database.user.update({
-        where: { discordId: newMember.id },
+      await database.member.update({
+        where: { guildId_discordId: { discordId: newMember.id, guildId: newMember.guild.id } },
         data: {
           timeJoinedWaitlist: null,
           informedOnWaitlist: null,

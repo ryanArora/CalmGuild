@@ -3,6 +3,8 @@ import { client as database } from "database";
 
 const interaction: RegisteredButtonInteraction = {
   execute: async (client, interaction) => {
+    if (!interaction.guild) return;
+
     const memberId = interaction.customId.split("_")[1];
     if (!memberId) return interaction.reply("Error");
 
@@ -12,10 +14,11 @@ const interaction: RegisteredButtonInteraction = {
         ephemeral: true,
       });
 
-    await database.user.update({
-      where: { discordId: memberId },
+    await database.member.update({
+      where: { guildId_discordId: { discordId: memberId, guildId: interaction.guild.id } },
       data: { guildApplicationChannelId: null },
     });
+
     interaction.channel?.delete();
   },
   validator: (interaction) => interaction.customId.toLowerCase().startsWith("cancelapplication"),

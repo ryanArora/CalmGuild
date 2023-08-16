@@ -1,5 +1,6 @@
 import { getGuild } from "../utils/apis/hypixel";
 import createApplication from "../utils/createApplication";
+import findOrCreateMemberArgs from "../utils/database/findOrCreateMemberArgs";
 import getRole from "../utils/getRole";
 import { client as database } from "database";
 import { CommandData, TextChannel } from "discord.js";
@@ -7,6 +8,7 @@ import { CommandData, TextChannel } from "discord.js";
 const command: CommandData = {
   run: async (client, message) => {
     if (!message.guild || !message.member) return;
+    const guildId = message.guild.id;
 
     const waitlistRole = await getRole("WAITLIST", message.guild);
     if (waitlistRole && message.member.roles.cache.has(waitlistRole.id)) {
@@ -14,23 +16,22 @@ const command: CommandData = {
       return;
     }
 
-    const userData = await database.user.findFirst({
-      where: { discordId: message.author.id },
-      select: { minecraftUuid: true, guildApplicationChannelId: true },
-    });
-    if (!userData || !userData.minecraftUuid) {
+    const data = await database.user.upsert({ ...findOrCreateMemberArgs(message.author.id, message.guild.id), select: { minecraftUuid: true, members: { select: { guildApplicationChannelId: true, discordId: true } } } });
+    const memberData = data.members.find((member) => member.discordId === message.author.id);
+
+    if (!memberData || !data.minecraftUuid) {
       message.reply("You must link your discord account to your minecraft ign before applying. Please use the c!link (ign) command and then run c!apply again.");
       return;
     }
 
     const guild = await getGuild("Calm");
-    if (guild && guild.members.find((m) => m.uuid === userData.minecraftUuid)) {
+    if (guild && guild.members.find((m) => m.uuid === data.minecraftUuid)) {
       message.reply("You are already in the guild!");
       return;
     }
 
-    if (userData.guildApplicationChannelId) {
-      const channel = message.guild.channels.cache.get(userData.guildApplicationChannelId);
+    if (memberData.guildApplicationChannelId) {
+      const channel = message.guild.channels.cache.get(memberData.guildApplicationChannelId);
       if (channel && channel instanceof TextChannel) {
         if (channel.permissionsFor(message.member).has("ViewChannel")) {
           message.reply(`You already have an open application, ${channel}`);
@@ -42,11 +43,11 @@ const command: CommandData = {
       }
     }
 
-    createApplication(message.member, userData.minecraftUuid)
+    createApplication(message.member, data.minecraftUuid)
       .then(async (channel) => {
         message.reply(`Opened an appliation for you, ${channel}`);
-        await database.user.update({
-          where: { discordId: message.author.id },
+        await database.member.update({
+          where: { guildId_discordId: { guildId: guildId, discordId: message.author.id } },
           data: { guildApplicationChannelId: channel.id },
         });
       })
