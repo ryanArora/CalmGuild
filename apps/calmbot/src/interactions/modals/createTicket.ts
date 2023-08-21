@@ -2,6 +2,7 @@ import { RegisteredModalSubmitInteraction } from "../../client/interactions";
 import { client as database } from "database";
 import { GuildMember, ButtonBuilder, EmbedBuilder, OverwriteData, PermissionResolvable, Colors, ButtonStyle, ActionRowBuilder, MessageActionRowComponentBuilder } from "discord.js";
 import { PermissionsBitField } from "discord.js";
+import findOrCreateMemberArgs from "../../utils/database/findOrCreateMemberArgs";
 
 const { ViewChannel, ReadMessageHistory, SendMessages, UseExternalEmojis, AttachFiles, EmbedLinks } = PermissionsBitField.Flags;
 
@@ -32,6 +33,8 @@ const interaction: RegisteredModalSubmitInteraction = {
         permissions.push({ id: roleId, allow: ALLOW_PERMISSIONS });
       }
     }
+
+    await database.user.upsert({ ...findOrCreateMemberArgs(interaction.user.id, interaction.guild.id) });
 
     interaction.guild.channels
       .create({
