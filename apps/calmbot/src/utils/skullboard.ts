@@ -1,5 +1,6 @@
-import { MessageReaction, TextChannel, EmbedBuilder, Message, PartialMessage } from "discord.js";
+import { MessageReaction, TextChannel, EmbedBuilder } from "discord.js";
 import { SkullboardMessage, client as database } from "database";
+import getImageFromMessage from "./getImageFromMessage";
 
 export const createSkullboardMessage = async (messageReaction: MessageReaction, skullboardChannel: TextChannel) => {
   if (!messageReaction.message.guild) return;
@@ -34,15 +35,11 @@ const createEmbed = (messageReaction: MessageReaction): EmbedBuilder => {
   const message = messageReaction.message;
 
   embed.setAuthor({ name: message.member?.nickname ?? message.author?.username ?? "Unavalaible", iconURL: message.member?.user.avatarURL() ?? message.author?.avatarURL() ?? undefined });
+  const image = getImageFromMessage(message);
 
-  // Images can either be embeded (user sends image url) or attached (user uploads image)
-  if (message.attachments.size > 0 || message.embeds.length > 0) {
-    const image = getImageUrlFromAttachment(message) ?? getImageUrlFromEmbed(message);
-
-    if (image) embed.setImage(image);
-    else if (message.attachments.size > 0) {
-      embed.addFields([{ name: "Attachment", value: message.attachments.first()?.url ?? "Unavaliable" }]);
-    }
+  if (image) embed.setImage(image);
+  else if (message.attachments.size > 0) {
+    embed.addFields([{ name: "Attachment", value: message.attachments.first()?.url ?? "Unavaliable" }]);
   }
 
   if (message.content !== null) embed.setDescription(message.content);
@@ -53,8 +50,5 @@ const createEmbed = (messageReaction: MessageReaction): EmbedBuilder => {
 
   return embed;
 };
-
-const getImageUrlFromAttachment = (message: Message | PartialMessage) => message.attachments.filter((attachment) => attachment.contentType?.startsWith("image") ?? false).first()?.url;
-const getImageUrlFromEmbed = (message: Message | PartialMessage) => message.embeds.filter((embed) => embed.data.type === "image")[0]?.url ?? undefined;
 
 export const removeSkullboardMessageFromDatabase = async (skullboardMessage: SkullboardMessage) => database.skullboardMessage.delete({ where: { originalMessageId: skullboardMessage.originalMessageId } });
