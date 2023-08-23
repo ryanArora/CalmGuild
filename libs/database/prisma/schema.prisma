@@ -32,6 +32,8 @@ model Member {
   frozenOnWaitlist          Boolean?
   informedOnWaitlist        Boolean?
 
+  submitedChallenges SubmitedChallenge[]
+
   @@id([guildId, discordId])
 }
 
@@ -45,6 +47,7 @@ model Guild {
   channels           Channel[]
   roles              Role[]
   skullboardMessages SkullboardMessage[]
+  challenges         Challenge[]
 }
 
 model SkullboardMessage {
@@ -55,6 +58,37 @@ model SkullboardMessage {
   skullboardMessageId String @unique
 
   @@id([guildId, originalMessageId])
+}
+
+model Challenge {
+  id      String
+  guildId String
+
+  guild       Guild  @relation(fields: [guildId], references: [guildId], onDelete: Cascade)
+  displayName String
+  points      Int
+
+  submitedChallenges SubmitedChallenge[]
+
+  @@id([id, guildId])
+}
+
+enum SubmitedChallengeState {
+  APPROVED
+  PENDING
+}
+
+model SubmitedChallenge {
+  memberId    String
+  challengeId String
+  guildId     String
+
+  state SubmitedChallengeState
+
+  member    Member    @relation(fields: [guildId, memberId], references: [guildId, discordId], onDelete: Cascade)
+  challenge Challenge @relation(fields: [guildId, challengeId], references: [guildId, id], onDelete: Cascade)
+
+  @@id([memberId, challengeId])
 }
 
 enum RoleType {
@@ -79,6 +113,8 @@ enum ChannelType {
   SUGGESTIONS
   GUILD_BRIDGE
   SKULLBOARD
+  CHALLENGE_SUBMISSIONS
+  CHALLENGE_PROOF // Where challenge accept/deny messages are sent if the user doesn't have their DMs open
 }
 
 model Channel {
