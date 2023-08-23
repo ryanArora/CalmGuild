@@ -8,8 +8,10 @@ import dotenv from "dotenv";
 import path from "path";
 import invariant from "tiny-invariant";
 
-dotenv.config();
+process.on("unhandledException", console.error);
+process.on("unhandledRejection", console.error);
 
+dotenv.config();
 invariant(process.env.BOT_TOKEN, "BOT_TOKEN env variable not defined");
 
 const { Guilds, GuildMembers, GuildMessages, MessageContent, GuildMessageReactions } = IntentsBitField.Flags;
