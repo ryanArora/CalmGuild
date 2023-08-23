@@ -3,7 +3,6 @@ import { client as database } from "database";
 import getImageFromMessage from "../../utils/getImageFromMessage";
 import getChannel from "../../utils/getChannel";
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, MessageActionRowComponentBuilder, TextChannel } from "discord.js";
-import findOrCreateMemberArgs from "../../utils/database/findOrCreateMemberArgs";
 const command: CommandData = {
   run: async (client, message, args) => {
     if (!message.guild || !args[0]) return;
@@ -32,7 +31,6 @@ const command: CommandData = {
       return;
     }
 
-    await database.user.upsert({ ...findOrCreateMemberArgs(message.author.id, message.guild.id) });
     await database.submitedChallenge.create({ data: { state: "PENDING", challengeId: id, guildId: message.guild.id, memberId: message.author.id } });
 
     const embed = new EmbedBuilder().setDescription(`Challenge request from ${message.author}`);
@@ -51,6 +49,7 @@ const command: CommandData = {
   usage: "challenge submit <id> <attach image of proof>",
   defaultSubcommand: true,
   minimumArguments: 1,
+  ensureMemberDataExists: true,
 };
 
 export default command;

@@ -18,6 +18,7 @@ export interface Command {
   aliases?: string[];
   subcommands?: Collection<string, Command>;
   defaultSubcommand?: boolean;
+  ensureMemberDataExists?: boolean;
 }
 
 export type CommandData = Omit<Command, "type">;

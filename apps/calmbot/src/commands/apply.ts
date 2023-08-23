@@ -1,6 +1,5 @@
 import { getGuild } from "../utils/apis/hypixel";
 import createApplication from "../utils/createApplication";
-import findOrCreateMemberArgs from "../utils/database/findOrCreateMemberArgs";
 import getRole from "../utils/getRole";
 import { client as database } from "database";
 import { CommandData, TextChannel } from "discord.js";
@@ -16,16 +15,19 @@ const command: CommandData = {
       return;
     }
 
-    const data = await database.user.upsert({ ...findOrCreateMemberArgs(message.author.id, message.guild.id), select: { minecraftUuid: true, members: { select: { guildApplicationChannelId: true, discordId: true } } } });
-    const memberData = data.members.find((member) => member.discordId === message.author.id);
+    const memberData = await database.member.findUnique({
+      where: { guildId_discordId: { discordId: message.author.id, guildId: message.guild.id } },
+      select: { guildApplicationChannelId: true, discordId: true, user: { select: { minecraftUuid: true } } },
+    });
+    console.log(memberData);
 
-    if (!memberData || !data.minecraftUuid) {
+    if (!memberData || !memberData.user.minecraftUuid) {
       message.reply("You must link your discord account to your minecraft ign before applying. Please use the c!link (ign) command and then run c!apply again.");
       return;
     }
 
     const guild = await getGuild("Calm");
-    if (guild && guild.members.find((m) => m.uuid === data.minecraftUuid)) {
+    if (guild && guild.members.find((m) => m.uuid === memberData.user.minecraftUuid)) {
       message.reply("You are already in the guild!");
       return;
     }
@@ -43,7 +45,7 @@ const command: CommandData = {
       }
     }
 
-    createApplication(message.member, data.minecraftUuid)
+    createApplication(message.member, memberData.user.minecraftUuid)
       .then(async (channel) => {
         message.reply(`Opened an appliation for you, ${channel}`);
         await database.member.update({
@@ -57,6 +59,7 @@ const command: CommandData = {
       });
   },
   usage: "apply",
+  ensureMemberDataExists: true,
 };
 
 export default command;
