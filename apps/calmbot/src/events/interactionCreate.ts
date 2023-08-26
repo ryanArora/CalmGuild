@@ -1,19 +1,47 @@
 import { Event } from "../client/events";
-import { Interaction } from "discord.js";
-
+import { Client, Interaction } from "discord.js";
+import { BaseRegisteredInteraction } from "../client/interactions";
+import { client as database } from "database";
+import findOrCreateMemberArgs from "../utils/database/findOrCreateMemberArgs";
 const interactionEvent: Event = {
   execute: (client, interaction: Interaction) => {
     if (interaction.isButton()) {
-      client.buttons.find((i) => i.validator(interaction))?.execute(client, interaction);
+      execute(
+        client,
+        interaction,
+        client.buttons.find((i) => i.validator(interaction))
+      );
     } else if (interaction.isStringSelectMenu()) {
-      client.selectMenus.find((i) => i.validator(interaction))?.execute(client, interaction);
+      execute(
+        client,
+        interaction,
+        client.selectMenus.find((i) => i.validator(interaction))
+      );
     } else if (interaction.isModalSubmit()) {
-      client.modals.find((i) => i.validator(interaction))?.execute(client, interaction);
+      execute(
+        client,
+        interaction,
+        client.modals.find((i) => i.validator(interaction))
+      );
     } else if (interaction.isContextMenuCommand()) {
-      client.contextMenus.find((i) => i.data.name === interaction.commandName)?.execute(client, interaction);
+      execute(
+        client,
+        interaction,
+        client.contextMenus.find((i) => i.data.name === interaction.commandName)
+      );
     }
   },
   type: "interactionCreate",
 };
 
 export default interactionEvent;
+
+const execute = async (client: Client, interaction: Interaction, interactionData?: BaseRegisteredInteraction<unknown>) => {
+  if (!interactionData || !interaction.guild) return;
+
+  if (interactionData.ensureMemberDataExists) {
+    await database.user.upsert({ ...findOrCreateMemberArgs(interaction.user.id, interaction.guild.id) });
+  }
+
+  interactionData.execute(client, interaction);
+};

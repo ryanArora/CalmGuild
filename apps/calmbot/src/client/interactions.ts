@@ -2,25 +2,26 @@ import { ButtonInteraction, Client, ContextMenuCommandBuilder, ContextMenuComman
 import fs from "fs";
 import path from "path";
 
-interface RegisteredInteraction<T> {
+export interface BaseRegisteredInteraction<T> {
   execute: (client: Client, interaction: T) => void;
+  ensureMemberDataExists?: boolean;
+}
+
+export interface RegisteredComponentInteraction<T> extends BaseRegisteredInteraction<T> {
   validator: (interaction: T) => boolean;
 }
 
-interface RegisteredCommandInteraction<T, B> {
-  execute: (client: Client, interaction: T) => void;
+export interface RegisteredCommandInteraction<T, B> extends BaseRegisteredInteraction<T> {
   data: B; // for the builder (ContextMenuCommandbuilder, SlashCommandBuilder etc)
 }
 
 // Non Commands
-export type RegisteredModalSubmitInteraction = RegisteredInteraction<ModalSubmitInteraction>;
-export type RegisteredSelectMenuInteraction = RegisteredInteraction<SelectMenuInteraction>;
-export type RegisteredButtonInteraction = RegisteredInteraction<ButtonInteraction>;
+export type RegisteredModalSubmitInteraction = RegisteredComponentInteraction<ModalSubmitInteraction>;
+export type RegisteredSelectMenuInteraction = RegisteredComponentInteraction<SelectMenuInteraction>;
+export type RegisteredButtonInteraction = RegisteredComponentInteraction<ButtonInteraction>;
 
 // Commands
 export type RegisteredContextMenuInteraction = RegisteredCommandInteraction<ContextMenuCommandInteraction, ContextMenuCommandBuilder>;
-
-export type PossibleInteraction = RegisteredModalSubmitInteraction | RegisteredSelectMenuInteraction | RegisteredButtonInteraction | RegisteredContextMenuInteraction;
 
 export const registerInteractions = (client: Client, interactionDirectory: string) => {
   const files = fs.readdirSync(interactionDirectory);
@@ -38,7 +39,7 @@ export const registerInteractions = (client: Client, interactionDirectory: strin
       if (!interactionFileStats.isFile() || !interactionFile.endsWith(".js")) continue;
 
       // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const interaction: PossibleInteraction = require(path.join(interactionDirectory, file, interactionFile)).default;
+      const interaction: BaseRegisteredInteraction<unknown> = require(path.join(interactionDirectory, file, interactionFile)).default;
 
       switch (fileName) {
         case "buttons":
