@@ -2,6 +2,8 @@ import { RegisteredModalSubmitInteraction } from "../../client/interactions";
 import { client as database } from "database";
 import { Colors, EmbedBuilder, TextChannel } from "discord.js";
 import getChannel from "../../utils/getChannel";
+import sendDmOrChannel from "../../utils/sendDmOrChannel";
+import disableButtons from "../../utils/disableButtons";
 
 const interaction: RegisteredModalSubmitInteraction = {
   execute: async (client, interaction) => {
@@ -18,25 +20,16 @@ const interaction: RegisteredModalSubmitInteraction = {
     });
 
     const reason = interaction.fields.getTextInputValue("reason");
-    client.users
-      .fetch(interactionArgs[1])
-      .then((user) => {
-        const embed = new EmbedBuilder()
-          .setColor(Colors.DarkRed)
-          .setTitle("Challenge Request Denied")
-          .setDescription(`**Challenge Name:** ${submitedChallenge.challenge.displayName}\n**Challenge ID:** ${interactionArgs[2]}\n\n**Reason:** ${reason}`)
-          .setFooter({ text: "Run c!challenge check to view your progress so far" });
 
-        user.send({ embeds: [embed] }).catch(async () => {
-          const channel = await getChannel("CHALLENGE_PROOF", guild);
-          if (channel instanceof TextChannel) {
-            channel.send({ content: interaction.user.toString(), embeds: [embed] });
-          }
-        });
+    const embed = new EmbedBuilder()
+      .setColor(Colors.DarkRed)
+      .setTitle("Challenge Request Denied")
+      .setDescription(`**Challenge Name:** ${submitedChallenge.challenge.displayName}\n**Challenge ID:** ${interactionArgs[2]}\n\n**Reason:** ${reason}`)
+      .setFooter({ text: "Run c!challenge check to view your progress so far" });
 
-        interaction.editReply(`Denied by ${interaction.user}`);
-      })
-      .catch();
+    sendDmOrChannel(client, interactionArgs[1], guild, "CHALLENGE_PROOF", { content: `<@${interactionArgs[1]}>`, embeds: [embed] });
+    interaction.editReply(`Denied by ${interaction.user}`);
+    if (interaction.isFromMessage()) disableButtons(interaction.message);
   },
   validator: (interaction) => interaction.customId.toLowerCase().startsWith("denychallenge"),
 };

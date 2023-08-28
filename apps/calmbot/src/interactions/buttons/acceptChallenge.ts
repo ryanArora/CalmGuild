@@ -4,6 +4,7 @@ import disableButtons from "../../utils/disableButtons";
 import { Colors, TextChannel } from "discord.js";
 import { EmbedBuilder } from "@discordjs/builders";
 import getChannel from "../../utils/getChannel";
+import sendDmOrChannel from "../../utils/sendDmOrChannel";
 
 const interaction: RegisteredButtonInteraction = {
   execute: async (client, interaction) => {
@@ -19,25 +20,15 @@ const interaction: RegisteredButtonInteraction = {
     const submitedChallenge = await database.submitedChallenge.update({ where: { memberId_challengeId: { memberId, challengeId } }, data: { state: "APPROVED" }, select: { challenge: { select: { displayName: true } } } });
 
     await disableButtons(interaction.message);
+
+    const embed = new EmbedBuilder()
+      .setColor(Colors.Green)
+      .setTitle("Challenge Request Accepted")
+      .setDescription(`**Challenge Name:** ${submitedChallenge.challenge.displayName}\n**Challenge ID:** ${challengeId}`)
+      .setFooter({ text: "Run c!challenge check to view your progress so far" });
+
+    sendDmOrChannel(client, memberId, guild, "CHALLENGE_PROOF", { content: `<@${memberId}>`, embeds: [embed] });
     interaction.reply(`Challenge accepted by ${interaction.user}`);
-
-    client.users
-      .fetch(memberId)
-      .then((user) => {
-        const embed = new EmbedBuilder()
-          .setColor(Colors.Green)
-          .setTitle("Challenge Request Accepted")
-          .setDescription(`**Challenge Name:** ${submitedChallenge.challenge.displayName}\n**Challenge ID:** ${challengeId}`)
-          .setFooter({ text: "Run c!challenge check to view your progress so far" });
-
-        user.send({ embeds: [embed] }).catch(async () => {
-          const channel = await getChannel("CHALLENGE_PROOF", guild);
-          if (channel instanceof TextChannel) {
-            channel.send({ content: interaction.user.toString(), embeds: [embed] });
-          }
-        });
-      })
-      .catch();
   },
   validator: (interaction) => interaction.customId.toLowerCase().startsWith("acceptchallenge"),
 };
