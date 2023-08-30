@@ -6,7 +6,7 @@ import fs from "fs";
 import path from "path";
 import invariant from "tiny-invariant";
 
-type CommandRunCallback = (client: Client, message: Message, args: string[]) => void;
+type CommandRunCallback = (client: Client, message: Message<true>, args: string[]) => void;
 type CommandType = "COMMAND" | "SUB_COMMAND";
 
 export interface Command {
@@ -54,7 +54,7 @@ export const registerCommands = (client: Client, commandsDirectory: string) => {
   }
 };
 
-export const handleCommand = async (client: Client, command: Command, message: Message, args: string[]) => {
+export const handleCommand = async (client: Client, command: Command, message: Message<true>, args: string[]) => {
   if (command.type === "SUB_COMMAND") {
     const subcommand = args[0] && command.subcommands ? getCommand(command.subcommands, args[0]) : undefined;
     if (subcommand) {

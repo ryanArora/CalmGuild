@@ -5,7 +5,7 @@ import { Message } from "discord.js";
 
 const executeCommand: Event = {
   execute: (client, message: Message) => {
-    if (!message.guild || message.author.bot) return;
+    if (!message.inGuild() || message.author.bot) return;
 
     const prefix = "c!";
     if (!message.content.toLowerCase().startsWith(prefix)) return;

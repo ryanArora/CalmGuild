@@ -3,12 +3,10 @@ import { CommandData } from "../../client/command";
 import { client as database } from "database";
 const command: CommandData = {
   run: async (client, message) => {
-    if (!message.guild) return;
-
-    const completedChallenges = await database.submitedChallenge.findMany({ where: { memberId: message.author.id, guildId: message.guild.id, state: "APPROVED" }, select: { challengeId: true, challenge: { select: { points: true } } } });
+    const completedChallenges = await database.submitedChallenge.findMany({ where: { memberId: message.author.id, guildId: message.guildId, state: "APPROVED" }, select: { challengeId: true, challenge: { select: { points: true } } } });
     const pointsEarned = completedChallenges.reduce((aggregator, c) => aggregator + c.challenge.points, 0);
 
-    const incompleteChallenges = (await database.challenge.findMany({ where: { guildId: message.guild.id } })).filter((challenge) => !completedChallenges.find((c) => c.challengeId === challenge.id));
+    const incompleteChallenges = (await database.challenge.findMany({ where: { guildId: message.guildId } })).filter((challenge) => !completedChallenges.find((c) => c.challengeId === challenge.id));
     const unearnedPoints = incompleteChallenges.reduce((aggregator, c) => aggregator + c.points, 0);
 
     const embed = new EmbedBuilder().setDescription(`Challenges for ${message.author}`);

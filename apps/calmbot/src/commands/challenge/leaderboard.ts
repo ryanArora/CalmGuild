@@ -4,8 +4,6 @@ import { client as database } from "database";
 import { Colors } from "discord.js";
 const command: CommandData = {
   run: async (client, message) => {
-    if (!message.guild) return;
-
     const members = await database.member.findMany({
       where: { submitedChallenges: { some: { state: "APPROVED" } } },
       select: { discordId: true, submitedChallenges: { where: { state: "APPROVED" }, select: { challenge: { select: { points: true } } } } },

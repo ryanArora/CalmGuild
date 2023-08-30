@@ -6,8 +6,7 @@ import { CommandData, TextChannel } from "discord.js";
 
 const command: CommandData = {
   run: async (client, message) => {
-    if (!message.guild || !message.member) return;
-    const guildId = message.guild.id;
+    if (!message.member) return;
 
     const waitlistRole = await getRole("WAITLIST", message.guild);
     if (waitlistRole && message.member.roles.cache.has(waitlistRole.id)) {
@@ -16,7 +15,7 @@ const command: CommandData = {
     }
 
     const memberData = await database.member.findUnique({
-      where: { guildId_discordId: { discordId: message.author.id, guildId: message.guild.id } },
+      where: { guildId_discordId: { discordId: message.author.id, guildId: message.guildId } },
       select: { guildApplicationChannelId: true, discordId: true, user: { select: { minecraftUuid: true } } },
     });
     console.log(memberData);
@@ -49,7 +48,7 @@ const command: CommandData = {
       .then(async (channel) => {
         message.reply(`Opened an appliation for you, ${channel}`);
         await database.member.update({
-          where: { guildId_discordId: { guildId: guildId, discordId: message.author.id } },
+          where: { guildId_discordId: { guildId: message.guildId, discordId: message.author.id } },
           data: { guildApplicationChannelId: channel.id },
         });
       })

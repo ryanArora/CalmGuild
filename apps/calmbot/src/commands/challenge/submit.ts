@@ -5,10 +5,10 @@ import getChannel from "../../utils/getChannel";
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, MessageActionRowComponentBuilder, TextChannel } from "discord.js";
 const command: CommandData = {
   run: async (client, message, args) => {
-    if (!message.guild || !args[0]) return;
+    if (!args[0]) return;
     const id = args[0].toLowerCase();
 
-    const challenge = await database.challenge.findUnique({ where: { id_guildId: { id, guildId: message.guild.id } }, select: { displayName: true, submitedChallenges: { where: { memberId: message.author.id }, select: { state: true } } } });
+    const challenge = await database.challenge.findUnique({ where: { id_guildId: { id, guildId: message.guildId } }, select: { displayName: true, submitedChallenges: { where: { memberId: message.author.id }, select: { state: true } } } });
     if (!challenge) {
       message.reply("Invalid challenge id");
       return;
@@ -31,7 +31,7 @@ const command: CommandData = {
       return;
     }
 
-    await database.submitedChallenge.create({ data: { state: "PENDING", challengeId: id, guildId: message.guild.id, memberId: message.author.id } });
+    await database.submitedChallenge.create({ data: { state: "PENDING", challengeId: id, guildId: message.guildId, memberId: message.author.id } });
 
     const embed = new EmbedBuilder().setDescription(`Challenge request from ${message.author}`);
     embed.addFields([

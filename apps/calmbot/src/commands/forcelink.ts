@@ -6,7 +6,7 @@ import linkUser from "../utils/database/linkUser";
 
 const command: CommandData = {
   run: async (client, message, args) => {
-    if (!message.guild || !args[0]) return;
+    if (!args[0]) return;
 
     const discordUser = await getUserFromInput(client, args[0], ["DISCORD_ID", "DISCORD_MENTION"]);
     if (!discordUser) {
@@ -36,7 +36,7 @@ const command: CommandData = {
       return;
     }
 
-    linkUser(discordUser.id, minecraftProfile.id, message.guild.id)
+    linkUser(discordUser.id, minecraftProfile.id, message.guildId)
       .then(() => {
         message.reply("Account linked!");
       })
