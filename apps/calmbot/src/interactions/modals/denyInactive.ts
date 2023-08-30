@@ -6,13 +6,11 @@ import disableButtons from "../../utils/disableButtons";
 
 const interaction: RegisteredModalSubmitInteraction = {
   execute: async (client, interaction) => {
-    if (!interaction.guild) return;
     await interaction.deferReply();
-    const guild = interaction.guild;
 
     const discordId = interaction.customId.split("_")[1];
 
-    await database.member.update({ where: { guildId_discordId: { guildId: guild.id, discordId } }, data: { inactivePending: false } });
+    await database.member.update({ where: { guildId_discordId: { guildId: interaction.guildId, discordId } }, data: { inactivePending: false } });
 
     const reason = interaction.fields.getTextInputValue("reason");
 
@@ -22,7 +20,7 @@ const interaction: RegisteredModalSubmitInteraction = {
       .setDescription(`Sorry. Your inactiviy request has been denied due to:\n\n${escapeMarkdown(reason)}`)
       .setFooter({ text: "Feel free to always submit another request or contact staff if you believe this was a mistake" });
 
-    sendDmOrChannel(client, discordId, guild, { content: `<@${discordId}>`, embeds: [embed] }, "GUILD_ONLY");
+    sendDmOrChannel(client, discordId, interaction.guild, { content: `<@${discordId}>`, embeds: [embed] }, "GUILD_ONLY");
     interaction.editReply(`Inactivity denied by ${interaction.user}`);
     if (interaction.isFromMessage()) disableButtons(interaction.message);
   },

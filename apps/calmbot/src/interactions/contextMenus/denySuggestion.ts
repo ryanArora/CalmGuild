@@ -1,11 +1,11 @@
-import { ApplicationCommandType, ContextMenuCommandBuilder, GuildMember } from "discord.js";
+import { ApplicationCommandType, ContextMenuCommandBuilder } from "discord.js";
 import { RegisteredContextMenuInteraction } from "../../client/interactions";
 import checkPermission from "../../utils/checkPermission";
 import { editSuggestion, validateSuggestion } from "../../utils/suggestion";
 
 const contextMenu: RegisteredContextMenuInteraction = {
   execute: async (client, interaction) => {
-    if (!interaction.isMessageContextMenuCommand() || !interaction.inGuild() || !(interaction.member instanceof GuildMember)) return;
+    if (!interaction.isMessageContextMenuCommand()) return;
 
     if (!checkPermission(interaction.member, "Administrator")) {
       interaction.reply({ content: "You lack `Administrator` permissions.", ephemeral: true });

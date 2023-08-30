@@ -1,6 +1,6 @@
 import { RegisteredModalSubmitInteraction } from "../../client/interactions";
 import { client as database } from "database";
-import { GuildMember, ButtonBuilder, EmbedBuilder, OverwriteData, PermissionResolvable, Colors, ButtonStyle, ActionRowBuilder, MessageActionRowComponentBuilder } from "discord.js";
+import { ButtonBuilder, EmbedBuilder, OverwriteData, PermissionResolvable, Colors, ButtonStyle, ActionRowBuilder, MessageActionRowComponentBuilder } from "discord.js";
 import { PermissionsBitField } from "discord.js";
 import findOrCreateMemberArgs from "../../utils/database/findOrCreateMemberArgs";
 
@@ -10,8 +10,6 @@ const ALLOW_PERMISSIONS: PermissionResolvable[] = [ViewChannel, ReadMessageHisto
 
 const interaction: RegisteredModalSubmitInteraction = {
   execute: async (client, interaction) => {
-    if (!interaction.guild || !(interaction.member instanceof GuildMember)) return;
-
     await interaction.deferReply({ ephemeral: true });
 
     const guildData = await database.guild.findFirst({
@@ -34,7 +32,7 @@ const interaction: RegisteredModalSubmitInteraction = {
       }
     }
 
-    await database.user.upsert({ ...findOrCreateMemberArgs(interaction.user.id, interaction.guild.id) });
+    await database.user.upsert({ ...findOrCreateMemberArgs(interaction.user.id, interaction.guildId) });
 
     interaction.guild.channels
       .create({

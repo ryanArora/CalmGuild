@@ -5,10 +5,8 @@ import { ActionRowBuilder, ModalActionRowComponentBuilder, ModalBuilder, TextInp
 
 const interaction: RegisteredSelectMenuInteraction = {
   execute: async (client, interaction) => {
-    if (!interaction.guild) return;
-
     const memberData = await database.member.findUnique({
-      where: { guildId_discordId: { guildId: interaction.guild.id, discordId: interaction.user.id } },
+      where: { guildId_discordId: { guildId: interaction.guildId, discordId: interaction.user.id } },
       select: { inactivityExpires: true, currentlyInactive: true, inactivePending: true, user: { select: { minecraftUuid: true } } },
     });
 

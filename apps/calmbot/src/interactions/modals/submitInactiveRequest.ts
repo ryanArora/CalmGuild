@@ -1,13 +1,12 @@
 import { RegisteredModalSubmitInteraction } from "../../client/interactions";
 import { client as database } from "database";
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Colors, GuildMember, MessageActionRowComponentBuilder, TextChannel } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Colors, MessageActionRowComponentBuilder, TextChannel } from "discord.js";
 import { EmbedBuilder } from "@discordjs/builders";
 import getChannel from "../../utils/getChannel";
 import getNextDate, { DayOfWeek } from "../../utils/getNextDate";
 
 const interaction: RegisteredModalSubmitInteraction = {
   execute: async (client, interaction) => {
-    if (!interaction.guild || !(interaction.member instanceof GuildMember)) return;
     await interaction.deferReply({ ephemeral: true });
 
     const inactiveExpirationDate = Number(interaction.customId.split("_")[1]);
@@ -18,7 +17,7 @@ const interaction: RegisteredModalSubmitInteraction = {
       return;
     }
 
-    const memberData = await database.member.findUnique({ where: { guildId_discordId: { guildId: interaction.guild.id, discordId: interaction.user.id } }, select: { inactivityExpires: true } });
+    const memberData = await database.member.findUnique({ where: { guildId_discordId: { guildId: interaction.guildId, discordId: interaction.user.id } }, select: { inactivityExpires: true } });
 
     const reason = interaction.fields.getTextInputValue("reason");
     const embed = new EmbedBuilder()
@@ -43,7 +42,7 @@ const interaction: RegisteredModalSubmitInteraction = {
     }
 
     await inactiveRequestChannel.send({ embeds: [embed], components: [row] });
-    await database.member.update({ where: { guildId_discordId: { guildId: interaction.guild.id, discordId: interaction.user.id } }, data: { inactivePending: true } });
+    await database.member.update({ where: { guildId_discordId: { guildId: interaction.guildId, discordId: interaction.user.id } }, data: { inactivePending: true } });
 
     interaction.editReply("Submited. You will be informed when it is accepted/denied");
   },

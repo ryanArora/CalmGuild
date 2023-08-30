@@ -3,8 +3,6 @@ import { RegisteredButtonInteraction } from "../../client/interactions";
 
 const interaction: RegisteredButtonInteraction = {
   execute: async (client, interaction) => {
-    if (!interaction.guild) return;
-
     const interactionArgs = interaction.customId.split("_");
     if (interactionArgs.length < 3) return interaction.reply("Error");
 
