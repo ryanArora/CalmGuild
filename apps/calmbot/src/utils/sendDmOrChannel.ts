@@ -1,18 +1,18 @@
 import { ChannelType } from "database";
-import { Client, Guild, MessageCreateOptions, TextChannel } from "discord.js";
+import { BaseChannel, Client, Guild, MessageCreateOptions, TextChannel } from "discord.js";
 import getChannel from "./getChannel";
 
 // Attempts to DM a user a message,
 // if this user has their DMs closed it will send the message in the fallback channel provided
-export default async (client: Client, userId: string, guild: Guild, channel?: ChannelType | TextChannel, message: MessageCreateOptions) => {
+export default async (client: Client, userId: string, guild: Guild, message: MessageCreateOptions, channel?: ChannelType | BaseChannel) => {
   return new Promise(async () => {
     const user = client.users.cache.get(userId) ?? (await client.users.fetch(userId));
 
     user.send(message).catch(async () => {
       if (!channel) return;
 
-      if (channel instanceof TextChannel) {
-        channel.send(message);
+      if (channel instanceof BaseChannel) {
+        if (channel.isTextBased()) channel.send(message);
         return;
       }
 
