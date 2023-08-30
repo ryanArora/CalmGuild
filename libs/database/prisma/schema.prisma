@@ -32,6 +32,10 @@ model Member {
   frozenOnWaitlist          Boolean?
   informedOnWaitlist        Boolean?
 
+  currentlyInactive Boolean?
+  inactivityExpires BigInt?
+  inactivePending   Boolean?
+
   submitedChallenges SubmitedChallenge[]
 
   @@id([guildId, discordId])
@@ -96,6 +100,7 @@ enum RoleType {
   GUILD_STAFF
   APPLICATIONS_TEAM
   WAITLIST
+  INACTIVE // gexp exempt
 }
 
 model Role {
@@ -115,6 +120,8 @@ enum ChannelType {
   SKULLBOARD
   CHALLENGE_SUBMISSIONS
   CHALLENGE_PROOF // Where challenge accept/deny messages are sent if the user doesn't have their DMs open
+  INACTIVITY_REQUESTS
+  GUILD_ONLY // Where inactivity accept/deny messages are sent if the user doesn't have thier DMs open
 }
 
 model Channel {

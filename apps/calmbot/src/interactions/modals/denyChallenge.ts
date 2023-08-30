@@ -1,7 +1,6 @@
 import { RegisteredModalSubmitInteraction } from "../../client/interactions";
 import { client as database } from "database";
-import { Colors, EmbedBuilder, TextChannel } from "discord.js";
-import getChannel from "../../utils/getChannel";
+import { Colors, EmbedBuilder } from "discord.js";
 import sendDmOrChannel from "../../utils/sendDmOrChannel";
 import disableButtons from "../../utils/disableButtons";
 
@@ -27,7 +26,7 @@ const interaction: RegisteredModalSubmitInteraction = {
       .setDescription(`**Challenge Name:** ${submitedChallenge.challenge.displayName}\n**Challenge ID:** ${interactionArgs[2]}\n\n**Reason:** ${reason}`)
       .setFooter({ text: "Run c!challenge check to view your progress so far" });
 
-    sendDmOrChannel(client, interactionArgs[1], guild, "CHALLENGE_PROOF", { content: `<@${interactionArgs[1]}>`, embeds: [embed] });
+    sendDmOrChannel(client, interactionArgs[1], guild, { content: `<@${interactionArgs[1]}>`, embeds: [embed] }, "CHALLENGE_PROOF");
     interaction.editReply(`Denied by ${interaction.user}`);
     if (interaction.isFromMessage()) disableButtons(interaction.message);
   },

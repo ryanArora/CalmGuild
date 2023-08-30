@@ -1,9 +1,8 @@
 import { RegisteredButtonInteraction } from "../../client/interactions";
 import { client as database } from "database";
 import disableButtons from "../../utils/disableButtons";
-import { Colors, TextChannel } from "discord.js";
+import { Colors } from "discord.js";
 import { EmbedBuilder } from "@discordjs/builders";
-import getChannel from "../../utils/getChannel";
 import sendDmOrChannel from "../../utils/sendDmOrChannel";
 
 const interaction: RegisteredButtonInteraction = {
@@ -27,7 +26,7 @@ const interaction: RegisteredButtonInteraction = {
       .setDescription(`**Challenge Name:** ${submitedChallenge.challenge.displayName}\n**Challenge ID:** ${challengeId}`)
       .setFooter({ text: "Run c!challenge check to view your progress so far" });
 
-    sendDmOrChannel(client, memberId, guild, "CHALLENGE_PROOF", { content: `<@${memberId}>`, embeds: [embed] });
+    sendDmOrChannel(client, memberId, guild, { content: `<@${memberId}>`, embeds: [embed] }, "CHALLENGE_PROOF");
     interaction.reply(`Challenge accepted by ${interaction.user}`);
   },
   validator: (interaction) => interaction.customId.toLowerCase().startsWith("acceptchallenge"),
