@@ -5,7 +5,7 @@ import fs from "fs";
 
 const command: CommandData = {
   run: async (client, message) => {
-    if (!message.guild || !client.application) return;
+    if (!client.application) return;
 
     const dir = path.join(__dirname, "../interactions/contextMenus");
     const commands: ContextMenuCommandBuilder[] = [];
@@ -27,7 +27,7 @@ const command: CommandData = {
     try {
       console.log("Started refreshing application (/) commands.");
 
-      await rest.put(Routes.applicationGuildCommands(client.application.id, message.guild.id), { body: commands });
+      await rest.put(Routes.applicationGuildCommands(client.application.id, message.guildId), { body: commands });
 
       console.log("Successfully reloaded application (/) commands.");
       message.reply("Successfully reloaded application (/) commands.");

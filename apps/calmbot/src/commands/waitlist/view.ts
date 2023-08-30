@@ -4,8 +4,6 @@ import getMinecraftProfile from "../../utils/getMinecraftProfile";
 
 const command: CommandData = {
   run: async (client, message) => {
-    if (!message.guild) return;
-
     const waitlistMembers = await database.member.findMany({
       where: { timeJoinedWaitlist: { not: null } },
       select: { timeJoinedWaitlist: true, informedOnWaitlist: true, frozenOnWaitlist: true, user: { select: { minecraftUuid: true } } },

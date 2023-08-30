@@ -5,7 +5,7 @@ import { APIEmbedField, CommandData, EmbedBuilder } from "discord.js";
 
 const command: CommandData = {
   run: async (client, message, args) => {
-    if (!message.guild || !args[0]) return;
+    if (!args[0]) return;
     const user = await getUserFromInput(client, args[0]);
     if (!user) {
       message.reply("Couldn't find user");

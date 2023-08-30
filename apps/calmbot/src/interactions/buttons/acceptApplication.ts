@@ -4,13 +4,11 @@ import { client as database } from "database";
 
 const interaction: RegisteredButtonInteraction = {
   execute: async (client, interaction) => {
-    if (!interaction.guild) return;
-
     const memberId = interaction.customId.split("_")[1];
     if (!memberId) return interaction.reply("Error");
 
     await database.member.update({
-      where: { guildId_discordId: { discordId: memberId, guildId: interaction.guild.id } },
+      where: { guildId_discordId: { discordId: memberId, guildId: interaction.guildId } },
       data: { guildApplicationChannelId: null },
     });
     await interaction.channel?.delete();

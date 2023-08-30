@@ -4,8 +4,6 @@ const ticketReasons = ["Questions", "Punishment Appeals", "Reporting Users", "Cl
 
 const command: CommandData = {
   run: async (client, message) => {
-    if (!message.guild) return;
-
     const button = new ButtonBuilder().setCustomId("showTicketModal").setLabel("Open Ticket").setStyle(ButtonStyle.Success).setEmoji("✉️");
     const row = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(button);
 

@@ -1,11 +1,10 @@
-import { GuildMember, TextChannel } from "discord.js";
+import { TextChannel } from "discord.js";
 import { RegisteredModalSubmitInteraction } from "../../client/interactions";
 import getChannel from "../../utils/getChannel";
 import { getSuggestionMessage } from "../../utils/suggestion";
 
 const interaction: RegisteredModalSubmitInteraction = {
   execute: async (client, interaction) => {
-    if (!interaction.guild) return;
     const suggestionChannel = await getChannel("SUGGESTIONS", interaction.guild);
 
     if (suggestionChannel === undefined || !(suggestionChannel instanceof TextChannel)) {
@@ -13,7 +12,6 @@ const interaction: RegisteredModalSubmitInteraction = {
     }
 
     const member = interaction.member;
-    if (!(member instanceof GuildMember)) return;
 
     const message = getSuggestionMessage(interaction.fields.getTextInputValue("suggestion"), member);
     suggestionChannel.send(message).then((message) => {

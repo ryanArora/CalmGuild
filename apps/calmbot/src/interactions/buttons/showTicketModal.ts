@@ -4,15 +4,13 @@ import { ActionRowBuilder, ModalBuilder, ModalActionRowComponentBuilder, TextInp
 
 const interaction: RegisteredButtonInteraction = {
   execute: async (client, interaction) => {
-    if (!interaction.guild) return;
-
     const databaseUser = await database.member.findUnique({
-      where: { guildId_discordId: { discordId: interaction.user.id, guildId: interaction.guild.id } },
+      where: { guildId_discordId: { discordId: interaction.user.id, guildId: interaction.guildId } },
     });
 
     // Make sure user doesn't already have a ticket open
     if (databaseUser && databaseUser.openTicketChannelId) {
-      const channel = interaction.guild?.channels.cache.get(databaseUser.openTicketChannelId);
+      const channel = interaction.guild.channels.cache.get(databaseUser.openTicketChannelId);
 
       if (channel)
         return interaction.reply({
@@ -21,7 +19,7 @@ const interaction: RegisteredButtonInteraction = {
         });
 
       await database.member.update({
-        where: { guildId_discordId: { discordId: databaseUser.discordId, guildId: interaction.guild.id } },
+        where: { guildId_discordId: { discordId: databaseUser.discordId, guildId: interaction.guildId } },
         data: { openTicketChannelId: null },
       });
     }

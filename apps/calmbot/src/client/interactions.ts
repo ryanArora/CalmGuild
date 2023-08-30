@@ -16,12 +16,12 @@ export interface RegisteredCommandInteraction<T, B> extends BaseRegisteredIntera
 }
 
 // Non Commands
-export type RegisteredModalSubmitInteraction = RegisteredComponentInteraction<ModalSubmitInteraction>;
-export type RegisteredSelectMenuInteraction = RegisteredComponentInteraction<SelectMenuInteraction>;
-export type RegisteredButtonInteraction = RegisteredComponentInteraction<ButtonInteraction>;
+export type RegisteredModalSubmitInteraction = RegisteredComponentInteraction<ModalSubmitInteraction<"cached">>;
+export type RegisteredSelectMenuInteraction = RegisteredComponentInteraction<SelectMenuInteraction<"cached">>;
+export type RegisteredButtonInteraction = RegisteredComponentInteraction<ButtonInteraction<"cached">>;
 
 // Commands
-export type RegisteredContextMenuInteraction = RegisteredCommandInteraction<ContextMenuCommandInteraction, ContextMenuCommandBuilder>;
+export type RegisteredContextMenuInteraction = RegisteredCommandInteraction<ContextMenuCommandInteraction<"cached">, ContextMenuCommandBuilder>;
 
 export const registerInteractions = (client: Client, interactionDirectory: string) => {
   const files = fs.readdirSync(interactionDirectory);

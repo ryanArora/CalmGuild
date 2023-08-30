@@ -3,7 +3,6 @@ import { CommandData } from "../../client/command";
 import { client as database } from "database";
 const command: CommandData = {
   run: async (client, message) => {
-    if (!message.guild) return;
     const data = await database.challenge.findMany({ include: { submitedChallenges: true } });
     await database.challenge.deleteMany();
 

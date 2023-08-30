@@ -5,8 +5,6 @@ import { Message, ActionRowBuilder, ButtonBuilder, EmbedBuilder, TextChannel, es
 
 const interaction: RegisteredButtonInteraction = {
   execute: async (client, interaction) => {
-    if (!interaction.guild) return;
-
     const memberId = interaction.customId.split("_")[1];
     if (!memberId) return interaction.reply("Error");
 

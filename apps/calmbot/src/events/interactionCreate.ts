@@ -5,6 +5,8 @@ import { client as database } from "database";
 import findOrCreateMemberArgs from "../utils/database/findOrCreateMemberArgs";
 const interactionEvent: Event = {
   execute: (client, interaction: Interaction) => {
+    if (!interaction.inCachedGuild()) return;
+
     if (interaction.isButton()) {
       execute(
         client,

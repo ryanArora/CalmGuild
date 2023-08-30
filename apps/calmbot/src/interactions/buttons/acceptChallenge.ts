@@ -7,9 +7,6 @@ import sendDmOrChannel from "../../utils/sendDmOrChannel";
 
 const interaction: RegisteredButtonInteraction = {
   execute: async (client, interaction) => {
-    if (!interaction.guild) return;
-    const guild = interaction.guild;
-
     const interactionArgs = interaction.customId.split("_");
     if (interactionArgs.length < 3) return interaction.reply("Error");
 
@@ -26,7 +23,7 @@ const interaction: RegisteredButtonInteraction = {
       .setDescription(`**Challenge Name:** ${submitedChallenge.challenge.displayName}\n**Challenge ID:** ${challengeId}`)
       .setFooter({ text: "Run c!challenge check to view your progress so far" });
 
-    sendDmOrChannel(client, memberId, guild, { content: `<@${memberId}>`, embeds: [embed] }, "CHALLENGE_PROOF");
+    sendDmOrChannel(client, memberId, interaction.guild, { content: `<@${memberId}>`, embeds: [embed] }, "CHALLENGE_PROOF");
     interaction.reply(`Challenge accepted by ${interaction.user}`);
   },
   validator: (interaction) => interaction.customId.toLowerCase().startsWith("acceptchallenge"),

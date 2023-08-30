@@ -6,8 +6,7 @@ import linkUser from "../utils/database/linkUser";
 
 const command: CommandData = {
   run: async (client, message, args) => {
-    if (!message.guild || !args[0]) return;
-    const guildId = message.guild.id;
+    if (!args[0]) return;
 
     const user = await database.user.findFirst({
       where: { discordId: message.author.id },
@@ -49,7 +48,7 @@ const command: CommandData = {
     }
 
     // Create or Update user if the user doesn't exust; then, make sure there is a Member linked to that User
-    linkUser(message.author.id, profile.id, guildId)
+    linkUser(message.author.id, profile.id, message.guildId)
       .then(() => message.reply("Linked"))
       .catch((err) => {
         console.error(err);
