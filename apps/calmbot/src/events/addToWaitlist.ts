@@ -1,4 +1,5 @@
 import { Event } from "../client/events";
+import findOrCreateMemberArgs from "../utils/database/findOrCreateMemberArgs";
 import getChannel from "../utils/getChannel";
 import getRole from "../utils/getRole";
 import { client as database } from "database";
@@ -13,6 +14,8 @@ const addToWaitlist: Event = {
 
     const waitlistRole = await getRole("WAITLIST", newMember.guild);
     if (!waitlistRole) return;
+
+    await database.user.upsert({ ...findOrCreateMemberArgs(newMember.id, newMember.guild.id) });
 
     // waitlist role added
     if (newRoles.has(waitlistRole.id) && !oldRoles.has(waitlistRole.id)) {
