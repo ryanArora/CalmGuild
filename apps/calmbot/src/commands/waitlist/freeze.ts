@@ -27,7 +27,7 @@ const command: CommandData = {
   },
   requiredPermission: "STAFF",
   minimumArguments: 1,
-  usage: "waitlist frozen <user>",
+  usage: "waitlist freeze <user>",
   ensureMemberDataExists: true,
 };
 
