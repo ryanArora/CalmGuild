@@ -58,6 +58,13 @@
         "lintFilePatterns": ["apps/calmbot/**/*.ts"],
         "fix": true
       }
+    },
+    "pm2": {
+      "executor": "nx-pm2-plugin:pm2-executor",
+      "options": {
+        "command": "calmbot:serve:production",
+        "name": "calmguild-bot"
+      }
     }
   },
   "tags": []

@@ -11,7 +11,8 @@
     "node-cron": "^3.0.2",
     "tiny-invariant": "^1.3.1",
     "tslib": "^2.5.0",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "nx-pm2-plugin": "^1.0.5"
   },
   "devDependencies": {
     "@types/node-cron": "^3.0.7",
