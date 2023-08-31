@@ -25,7 +25,7 @@ const interaction: RegisteredButtonInteraction = {
     }
 
     const modal = new ModalBuilder();
-    const textInput = new TextInputBuilder().setLabel("How can we help you? (not required)").setStyle(TextInputStyle.Paragraph).setMaxLength(400).setCustomId("reason");
+    const textInput = new TextInputBuilder().setLabel("How can we help you?").setStyle(TextInputStyle.Paragraph).setMaxLength(400).setCustomId("reason");
 
     modal.setTitle("Create Ticket").addComponents(new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(textInput)).setCustomId("createTicket");
 
