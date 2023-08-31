@@ -4,6 +4,7 @@ import { Client, Collection } from "discord.js";
 
 export interface ClientExtensions {
   commands: Collection<string, Command>;
+  disabledCommands: Collection<string, string[]>; // K = guildId, V = commandNames
 
   buttons: RegisteredButtonInteraction[];
   selectMenus: RegisteredSelectMenuInteraction[];
@@ -14,6 +15,7 @@ export interface ClientExtensions {
 export const transformClient = (client: Client) => {
   const ext: ClientExtensions = {
     commands: new Collection(),
+    disabledCommands: new Collection(),
     buttons: [],
     selectMenus: [],
     modals: [],

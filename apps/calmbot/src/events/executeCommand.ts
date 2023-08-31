@@ -17,6 +17,11 @@ const executeCommand: Event = {
     const command = getCommand(client.commands, commandName);
     if (!command) return;
 
+    if (client.disabledCommands.get(message.guildId)?.includes(commandName)) {
+      message.reply("Sorry, this command has been disabled.");
+      return;
+    }
+
     handleCommand(client, command, message, args);
   },
   type: "messageCreate",
