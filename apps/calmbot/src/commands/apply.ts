@@ -18,7 +18,6 @@ const command: CommandData = {
       where: { guildId_discordId: { discordId: message.author.id, guildId: message.guildId } },
       select: { guildApplicationChannelId: true, discordId: true, user: { select: { minecraftUuid: true } } },
     });
-    console.log(memberData);
 
     if (!memberData || !memberData.user.minecraftUuid) {
       message.reply("You must link your discord account to your minecraft ign before applying. Please use the c!link (ign) command and then run c!apply again.");
