@@ -52,8 +52,19 @@ model Guild {
   members            Member[]
   channels           Channel[]
   roles              Role[]
+  loyaltyRole        LoyaltyRole[]
   skullboardMessages SkullboardMessage[]
   challenges         Challenge[]
+}
+
+model LoyaltyRole {
+  guildId String
+  guild   Guild  @relation(references: [guildId], fields: [guildId])
+
+  roleId               String
+  timeRequiredToEarnMs BigInt
+
+  @@id([guildId, roleId])
 }
 
 model SkullboardMessage {
@@ -124,6 +135,7 @@ enum ChannelType {
   CHALLENGE_PROOF // Where challenge accept/deny messages are sent if the user doesn't have their DMs open
   INACTIVITY_REQUESTS
   GUILD_ONLY // Where inactivity accept/deny messages are sent if the user doesn't have thier DMs open
+  GUILD_ANNOUNCEMENTS
 }
 
 model Channel {
