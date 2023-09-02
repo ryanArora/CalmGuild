@@ -13,7 +13,10 @@ const interaction: RegisteredButtonInteraction = {
     const memberId = interactionArgs[1];
     const inactiveExpirationDate = interactionArgs[2];
 
-    const memberData = await database.member.findUnique({ where: { guildId_discordId: { guildId: interaction.guildId, discordId: memberId }, inactivePending: true, currentlyInactive: false }, select: { inactivityExpires: true } });
+    const memberData = await database.member.findUnique({
+      where: { guildId_discordId: { guildId: interaction.guildId, discordId: memberId }, inactivePending: true, OR: [{ currentlyInactive: null }, { currentlyInactive: false }] },
+      select: { inactivityExpires: true },
+    });
     if (!memberData || (memberData.inactivityExpires ?? 0) > Date.now()) {
       interaction.editReply("Couldn't accept request");
       return;
