@@ -12,7 +12,7 @@ const event: Event = {
     await messageReaction.fetch().catch(console.error);
     const emojiCount = messageReaction.count;
 
-    if (emojiCount >= 2) {
+    if (emojiCount >= 5) {
       const skullboardChannel = await getChannel("SKULLBOARD", guild);
       if (!skullboardChannel || !(skullboardChannel instanceof TextChannel) || messageReaction.message.channel.id === skullboardChannel.id) return;
 

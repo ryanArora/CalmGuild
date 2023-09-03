@@ -20,7 +20,7 @@ export const updateSkullboardMessage = async (messageReaction: MessageReaction, 
   skullboardChannel.messages
     .fetch(skulledMessage.skullboardMessageId)
     .then(async (message) => {
-      if (messageReaction.count < 2) {
+      if (messageReaction.count < 5) {
         await message.delete();
         await removeSkullboardMessageFromDatabase(skulledMessage);
       } else message.edit({ content: `💀 ${messageReaction.count} ${messageReaction.message.channel}` });
