@@ -1,6 +1,6 @@
 import { RegisteredModalSubmitInteraction } from "../../client/interactions";
 import { client as database } from "database";
-import { ButtonBuilder, EmbedBuilder, OverwriteData, PermissionResolvable, Colors, ButtonStyle, ActionRowBuilder, MessageActionRowComponentBuilder } from "discord.js";
+import { ButtonBuilder, EmbedBuilder, OverwriteData, PermissionResolvable, Colors, ButtonStyle, ActionRowBuilder, MessageActionRowComponentBuilder, CategoryChannel } from "discord.js";
 import { PermissionsBitField } from "discord.js";
 import findOrCreateMemberArgs from "../../utils/database/findOrCreateMemberArgs";
 
@@ -38,6 +38,7 @@ const interaction: RegisteredModalSubmitInteraction = {
       .create({
         name: `ticket-${interaction.user.username}`,
         permissionOverwrites: permissions,
+        parent: interaction.guild.channels.cache.find((c) => c instanceof CategoryChannel && c.name.toLowerCase() === "tickets") as CategoryChannel,
       })
       .then(async (ticketChannel) => {
         await database.member.update({
