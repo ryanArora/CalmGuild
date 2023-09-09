@@ -6,12 +6,6 @@ const interaction: RegisteredButtonInteraction = {
     const memberId = interaction.customId.split("_")[1];
     if (!memberId) return interaction.reply("Error");
 
-    if (interaction.user.id !== memberId)
-      return interaction.reply({
-        content: "Only the creator of the application can do this",
-        ephemeral: true,
-      });
-
     await database.member.update({
       where: { guildId_discordId: { discordId: memberId, guildId: interaction.guildId } },
       data: { guildApplicationChannelId: null },
