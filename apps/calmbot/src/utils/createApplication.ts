@@ -1,7 +1,7 @@
 import getMinecraftProfile from "./getMinecraftProfile";
 import getRole from "./getRole";
 import { client as database } from "database";
-import { Channel, GuildMember, ActionRowBuilder, ButtonBuilder, EmbedBuilder, OverwriteData, PermissionResolvable, PermissionsBitField, ButtonStyle, MessageActionRowComponentBuilder } from "discord.js";
+import { Channel, GuildMember, ActionRowBuilder, ButtonBuilder, EmbedBuilder, OverwriteData, PermissionResolvable, PermissionsBitField, ButtonStyle, MessageActionRowComponentBuilder, CategoryChannel } from "discord.js";
 
 const { ViewChannel, ReadMessageHistory, SendMessages, UseExternalEmojis, AttachFiles, EmbedLinks } = PermissionsBitField.Flags;
 
@@ -26,6 +26,7 @@ export default (member: GuildMember, uuid: string): Promise<Channel> => {
       .create({
         name: `app${name ? `-${name}` : ""}`,
         permissionOverwrites: permissions,
+        parent: member.guild.channels.cache.find((c) => c instanceof CategoryChannel && ["apps", "applications"].includes(c.name.toLowerCase())) as CategoryChannel,
       })
       .then(async (channel) => {
         const guildData = await database.guild.findFirst({
