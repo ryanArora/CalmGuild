@@ -1,3 +1,4 @@
+import { getGuild } from "../utils/apis/hypixel";
 import getMinecraftProfile from "../utils/getMinecraftProfile";
 import getUserFromInput from "../utils/getUserFromInput";
 import { client as database } from "database";
@@ -18,7 +19,11 @@ const command: CommandData = {
     });
     let minecraftName: string | undefined = undefined;
 
+    let inHypixelGuild = false;
     if (userData && userData.minecraftUuid) {
+      const hypixelGuild = await getGuild("Calm").catch(console.error);
+      inHypixelGuild = hypixelGuild?.members.find((member) => member.uuid === userData.minecraftUuid) ? true : false;
+
       const name = await getMinecraftProfile(userData.minecraftUuid, ["MINECRAFT_UUID"]);
       if (name) minecraftName = name.name;
     }
@@ -28,6 +33,10 @@ const command: CommandData = {
       {
         name: "Minecraft UUID",
         value: userData?.minecraftUuid ?? "N/A (not linked)",
+      },
+      {
+        name: "In Guild (hypixel)",
+        value: inHypixelGuild ? "Yes" : "No",
       },
       { name: "Discord Id", value: user.id },
     ];
