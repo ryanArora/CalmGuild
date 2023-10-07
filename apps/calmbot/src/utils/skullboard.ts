@@ -42,7 +42,7 @@ const createEmbed = (messageReaction: MessageReaction): EmbedBuilder => {
     embed.addFields([{ name: "Attachment", value: message.attachments.first()?.url ?? "Unavaliable" }]);
   }
 
-  if (message.content !== null) embed.setDescription(message.content);
+  if (message.content) embed.setDescription(message.content);
 
   embed.addFields([{ name: "Source", value: `[Jump!](${message.url})` }]);
   embed.setColor("White");
