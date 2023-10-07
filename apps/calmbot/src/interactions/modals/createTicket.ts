@@ -47,7 +47,7 @@ const interaction: RegisteredModalSubmitInteraction = {
         });
 
         const embed = new EmbedBuilder()
-          .setColor(Colors.Red)
+          .setColor(Colors.Blurple)
           .setDescription(reason !== "" ? reason : "No reason provided")
           .addFields([{ name: "Opened By", value: interaction.user.toString() }]);
         const closeTicketButton = new ButtonBuilder().setLabel("Close Ticket").setCustomId(`closeTicket`).setStyle(ButtonStyle.Danger);

@@ -22,7 +22,7 @@ const interaction: RegisteredModalSubmitInteraction = {
     const reason = interaction.fields.getTextInputValue("reason");
     const embed = new EmbedBuilder()
       .setTitle("Inactivity Request")
-      .setColor(Colors.DarkBlue)
+      .setColor(Colors.Blurple)
       .addFields([
         { name: "Request from:", value: interaction.user.toString() },
         { name: "Reason:", value: reason },

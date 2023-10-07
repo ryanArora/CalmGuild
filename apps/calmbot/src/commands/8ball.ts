@@ -1,10 +1,10 @@
-import { EmbedBuilder } from "discord.js";
+import { Colors, EmbedBuilder } from "discord.js";
 import { CommandData } from "../client/command";
 
 const command: CommandData = {
   run(client, message) {
     const response = responses[Math.floor(Math.random() * responses.length)];
-    message.reply({ embeds: [new EmbedBuilder().setTitle(`🎱 ${response}`)] });
+    message.reply({ embeds: [new EmbedBuilder().setTitle(`🎱 ${response}`).setColor(Colors.Blurple)] });
   },
   usage: "8ball <question>",
   minimumArguments: 1,

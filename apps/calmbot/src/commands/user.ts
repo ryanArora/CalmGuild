@@ -2,7 +2,7 @@ import { getGuild } from "../utils/apis/hypixel";
 import getMinecraftProfile from "../utils/getMinecraftProfile";
 import getUserFromInput from "../utils/getUserFromInput";
 import { client as database } from "database";
-import { APIEmbedField, CommandData, EmbedBuilder } from "discord.js";
+import { APIEmbedField, Colors, CommandData, EmbedBuilder } from "discord.js";
 
 const command: CommandData = {
   run: async (client, message, args) => {
@@ -41,7 +41,7 @@ const command: CommandData = {
       { name: "Discord Id", value: user.id },
     ];
 
-    const embed = new EmbedBuilder();
+    const embed = new EmbedBuilder().setColor(Colors.Blurple);
     embed.setDescription(`Data for ${user}`);
     embed.addFields(embedFields);
 

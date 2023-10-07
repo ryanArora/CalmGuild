@@ -2,7 +2,7 @@ import { CommandData } from "../../client/command";
 import { client as database } from "database";
 import getImageFromMessage from "../../utils/getImageFromMessage";
 import getChannel from "../../utils/getChannel";
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, MessageActionRowComponentBuilder, TextChannel } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Colors, EmbedBuilder, MessageActionRowComponentBuilder, TextChannel } from "discord.js";
 const command: CommandData = {
   run: async (client, message, args) => {
     if (!args[0]) return;
@@ -33,7 +33,7 @@ const command: CommandData = {
 
     await database.submitedChallenge.create({ data: { state: "PENDING", challengeId: id, guildId: message.guildId, memberId: message.author.id } });
 
-    const embed = new EmbedBuilder().setDescription(`Challenge request from ${message.author}`);
+    const embed = new EmbedBuilder().setDescription(`Challenge request from ${message.author}`).setColor(Colors.Blurple);
     embed.addFields([
       { name: "Challenge name", value: challenge.displayName },
       { name: "Challenge Id", value: id },

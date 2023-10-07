@@ -1,7 +1,7 @@
-import { APIEmbedField, Client, EmbedBuilder, EmbedField, GuildMember, Message, MessageCreateOptions } from "discord.js";
+import { APIEmbedField, Client, Colors, EmbedBuilder, EmbedField, GuildMember, Message, MessageCreateOptions } from "discord.js";
 
 export const getSuggestionMessage = (suggestion: string, member: GuildMember): MessageCreateOptions => {
-  const embed = new EmbedBuilder().setTitle("Suggestion:").setDescription(suggestion).setTimestamp().setColor("#007FFF");
+  const embed = new EmbedBuilder().setTitle("Suggestion:").setDescription(suggestion).setTimestamp().setColor(Colors.Blurple);
   embed.setFooter({ text: member.displayName, iconURL: member.user.displayAvatarURL() });
   return { embeds: [embed] };
 };

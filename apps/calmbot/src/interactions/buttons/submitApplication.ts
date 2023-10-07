@@ -1,7 +1,7 @@
 import { RegisteredButtonInteraction } from "../../client/interactions";
 import disableButtons from "../../utils/disableButtons";
 import getRole from "../../utils/getRole";
-import { Message, ActionRowBuilder, ButtonBuilder, EmbedBuilder, TextChannel, escapeMarkdown, ButtonStyle, MessageActionRowComponentBuilder } from "discord.js";
+import { Message, ActionRowBuilder, ButtonBuilder, EmbedBuilder, TextChannel, escapeMarkdown, ButtonStyle, MessageActionRowComponentBuilder, Colors } from "discord.js";
 
 const interaction: RegisteredButtonInteraction = {
   execute: async (client, interaction) => {
@@ -31,6 +31,7 @@ const interaction: RegisteredButtonInteraction = {
 
     const embed = new EmbedBuilder();
     embed.setTitle("Application Submitted");
+    embed.setColor(Colors.Blurple);
     embed.setDescription(`${interaction.user} has submitted their application to Calm.\n\nMinecraft IGN: ${escapeMarkdown(mcName)}\nPlancke: https://plancke.io/hypixel/player/stats/${mcName}\n25karma: https://25karma.xyz/player/${mcName}`);
 
     const acceptButton = new ButtonBuilder().setStyle(ButtonStyle.Success).setLabel("Accept").setCustomId(`acceptApplication_${memberId}`);

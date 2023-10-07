@@ -7,7 +7,7 @@ const command: CommandData = {
     const button = new ButtonBuilder().setCustomId("showSuggesitonModal").setLabel("Create Suggestion").setStyle(ButtonStyle.Primary);
     const row = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(button);
 
-    const embed = new EmbedBuilder().setDescription(`Create a suggestion for ${message.guild.name}`).setColor(Colors.Blue);
+    const embed = new EmbedBuilder().setDescription(`Create a suggestion for ${message.guild.name}`).setColor(Colors.Blurple);
 
     message.reply({ embeds: [embed], components: [row] });
   },

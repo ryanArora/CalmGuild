@@ -18,7 +18,7 @@ const command: CommandData = {
     const leaderboard = [...members].sort((a, b) => getPoints(b) - getPoints(a));
     leaderboard.splice(10);
 
-    const embed = new EmbedBuilder().setTitle("Challenge Leaderboard").setColor(Colors.Blue);
+    const embed = new EmbedBuilder().setTitle("Challenge Leaderboard").setColor(Colors.Blurple);
 
     let i = 1;
     embed.setDescription(

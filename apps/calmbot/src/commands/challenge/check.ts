@@ -1,6 +1,7 @@
 import { EmbedBuilder } from "@discordjs/builders";
 import { CommandData } from "../../client/command";
 import { client as database } from "database";
+import { Colors } from "discord.js";
 const command: CommandData = {
   run: async (client, message) => {
     const completedChallenges = await database.submitedChallenge.findMany({ where: { memberId: message.author.id, guildId: message.guildId, state: "APPROVED" }, select: { challengeId: true, challenge: { select: { points: true } } } });
@@ -9,7 +10,7 @@ const command: CommandData = {
     const incompleteChallenges = (await database.challenge.findMany({ where: { guildId: message.guildId } })).filter((challenge) => !completedChallenges.find((c) => c.challengeId === challenge.id));
     const unearnedPoints = incompleteChallenges.reduce((aggregator, c) => aggregator + c.points, 0);
 
-    const embed = new EmbedBuilder().setDescription(`Challenges for ${message.author}`);
+    const embed = new EmbedBuilder().setDescription(`Challenges for ${message.author}`).setColor(Colors.Blurple);
     embed.addFields([
       {
         name: `Completed Challenges (${completedChallenges.length} worth ${pointsEarned} points)`,

@@ -1,7 +1,7 @@
 import getMinecraftProfile from "./getMinecraftProfile";
 import getRole from "./getRole";
 import { client as database } from "database";
-import { Channel, GuildMember, ActionRowBuilder, ButtonBuilder, EmbedBuilder, OverwriteData, PermissionResolvable, PermissionsBitField, ButtonStyle, MessageActionRowComponentBuilder, CategoryChannel } from "discord.js";
+import { Channel, GuildMember, ActionRowBuilder, ButtonBuilder, EmbedBuilder, OverwriteData, PermissionResolvable, PermissionsBitField, ButtonStyle, MessageActionRowComponentBuilder, CategoryChannel, Colors } from "discord.js";
 
 const { ViewChannel, ReadMessageHistory, SendMessages, UseExternalEmojis, AttachFiles, EmbedLinks } = PermissionsBitField.Flags;
 
@@ -35,7 +35,7 @@ export default (member: GuildMember, uuid: string): Promise<Channel> => {
         });
         const applicationQuestions = guildData?.applicationQuestions.map((question) => `**${question}**:\n\n`).join("") ?? "";
 
-        const embed = new EmbedBuilder().setTitle("Application for Calm Guild");
+        const embed = new EmbedBuilder().setTitle("Application for Calm Guild").setColor(Colors.Blurple);
         embed.setDescription(
           `Welcome! Please copy and paste the format below and send your answers to each question in this channel. Then, when you are done, click the "Submit Application" button below. If it was not your intention to apply, click the "Cancel" button below\n\n${applicationQuestions}`
         );
