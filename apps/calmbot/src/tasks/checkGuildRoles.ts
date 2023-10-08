@@ -3,8 +3,9 @@ import { getGuild } from "../utils/apis/hypixel";
 import getRole from "../utils/getRole";
 import { Task } from "../utils/startTasks";
 import { client as database } from "database";
-import { Colors } from "discord.js";
+import { Colors, escapeMarkdown } from "discord.js";
 import getChannel from "../utils/getChannel";
+import { getProfileFromUUID } from "../utils/apis/mojang";
 
 const task: Task = {
   execute: async (client) => {
@@ -26,13 +27,24 @@ const task: Task = {
 
     let description = "The following members have the guild member role but are __not in the guild__\n\n";
 
+    // People with guild member role
     for (const [, member] of guildMemberRole.members) {
       if (!users.find((m) => m.discordId === member.id)) {
         description += `${member.user} (${member.user.username})\n`;
       }
     }
 
-    const embed = new EmbedBuilder().setTitle("Daily Role Checking").setDescription(description).setColor(Colors.Blurple);
+    description += "\nThe following members are in the hypixel guild but not in the discord (or not linked)\n\n";
+
+    // People in hypixel guild
+    for (const member of hypixelGuild.members) {
+      const userData = users.find((u) => u.minecraftUuid === member.uuid);
+      if (!userData || !guild.members.cache.get(userData.discordId)) {
+        const profile = await getProfileFromUUID(member.uuid);
+        description += `${escapeMarkdown(profile?.name ?? member.uuid)}\n`;
+      }
+    }
+    const embed = new EmbedBuilder().setTitle("Daily Member Checking").setDescription(description).setColor(Colors.Blurple);
     channel.send({ embeds: [embed] });
   },
   cronExpression: "0 0 * * *",
