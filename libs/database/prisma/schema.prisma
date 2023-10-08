@@ -113,6 +113,7 @@ enum RoleType {
   GUILD_STAFF
   APPLICATIONS_TEAM
   WAITLIST
+  GUILD_MEMBER
   INACTIVE // gexp exempt
 }
 
@@ -136,6 +137,7 @@ enum ChannelType {
   INACTIVITY_REQUESTS
   GUILD_ONLY // Where inactivity accept/deny messages are sent if the user doesn't have thier DMs open
   GUILD_ANNOUNCEMENTS
+  GUILD_STAFF
 }
 
 model Channel {
