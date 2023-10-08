@@ -26,10 +26,12 @@ const task: Task = {
     if (!guildMemberRole) return;
 
     let description = "The following members have the guild member role but are __not in the guild__\n\n";
+    let send = false;
 
     // People with guild member role
     for (const [, member] of guildMemberRole.members) {
       if (!users.find((m) => m.discordId === member.id)) {
+        send = true;
         description += `${member.user} (${member.user.username})\n`;
       }
     }
@@ -42,10 +44,12 @@ const task: Task = {
       if (!userData || !guild.members.cache.get(userData.discordId)) {
         const profile = await getProfileFromUUID(member.uuid);
         description += `${escapeMarkdown(profile?.name ?? member.uuid)}\n`;
+        send = true;
       }
     }
+
     const embed = new EmbedBuilder().setTitle("Daily Member Checking").setDescription(description).setColor(Colors.Blurple);
-    channel.send({ embeds: [embed] });
+    if (send) channel.send({ embeds: [embed] });
   },
   cronExpression: "0 0 * * *",
 };
