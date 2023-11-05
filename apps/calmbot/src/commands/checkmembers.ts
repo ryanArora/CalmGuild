@@ -1,29 +1,23 @@
-import { EmbedBuilder } from "@discordjs/builders";
+import { escapeMarkdown, EmbedBuilder, Colors } from "discord.js";
+import { CommandData } from "../client/command";
 import { getGuild } from "../utils/apis/hypixel";
-import getRole from "../utils/getRole";
-import { Task } from "../utils/startTasks";
-import { client as database } from "database";
-import { Colors, escapeMarkdown } from "discord.js";
-import getChannel from "../utils/getChannel";
 import { getProfileFromUUID } from "../utils/apis/mojang";
+import getRole from "../utils/getRole";
+import { client as database } from "database";
 
-const task: Task = {
-  execute: async (client) => {
-    const guild = client.guilds.cache.get(process.env.DEFAULT_DISCORD_SERVER_ID);
-    if (!guild) return;
-
-    const channel = await getChannel("GUILD_STAFF", guild);
-    if (!channel?.isTextBased()) return;
-
+const command: CommandData = {
+  async run(client, message) {
     const hypixelGuild = await getGuild("Calm");
     if (!hypixelGuild) return;
 
     const users = await database.user.findMany({ where: { minecraftUuid: { in: hypixelGuild.members.map((m) => m.uuid) } } });
 
-    await guild.members.fetch();
+    await message.guild.members.fetch();
 
-    const guildMemberRole = await getRole("GUILD_MEMBER", guild);
+    const guildMemberRole = await getRole("GUILD_MEMBER", message.guild);
     if (!guildMemberRole) return;
+
+    const reply = await message.reply("Aquiring data (this may take some time)");
 
     let description = "The following members have the guild member role but are __not in the guild__\n\n";
     let send = false;
@@ -41,17 +35,19 @@ const task: Task = {
     // People in hypixel guild
     for (const member of hypixelGuild.members) {
       const userData = users.find((u) => u.minecraftUuid === member.uuid);
-      if (!userData || !guild.members.cache.get(userData.discordId)) {
+      if (!userData || !message.guild.members.cache.get(userData.discordId)) {
         const profile = await getProfileFromUUID(member.uuid);
         description += `${escapeMarkdown(profile?.name ?? member.uuid)}\n`;
         send = true;
       }
     }
 
-    const embed = new EmbedBuilder().setTitle("Daily Member Checking").setDescription(description).setColor(Colors.Blurple);
-    if (send) channel.send({ embeds: [embed] });
+    const embed = new EmbedBuilder().setTitle("Member Check").setDescription(description).setColor(Colors.Blurple);
+    if (send) reply.edit({ embeds: [embed] });
+    else reply.edit("All members check out");
   },
-  cronExpression: "0 0 * * *",
+  usage: "checkmembers",
+  requiredPermission: "STAFF",
 };
 
-export default task;
+export default command;
