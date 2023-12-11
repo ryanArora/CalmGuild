@@ -1,7 +1,7 @@
 import axios from "axios";
 import invariant from "tiny-invariant";
 
-export interface Player {
+export interface HypixelPlayer {
   uuid: string;
   playername: string;
   socialMedia?: {
@@ -11,7 +11,7 @@ export interface Player {
   };
 }
 
-export const getPlayer = (uuid: string): Promise<Player | undefined> => {
+export const getPlayer = (uuid: string): Promise<HypixelPlayer | undefined> => {
   invariant(process.env.HYPIXEL_API_KEY, "HYPIXEL_API_KEY env variable not defined");
   return new Promise((resolve, reject) => {
     axios
@@ -23,16 +23,22 @@ export const getPlayer = (uuid: string): Promise<Player | undefined> => {
   });
 };
 
-interface Guild {
+export interface HypixelGuild {
   name: string;
+  ranks: {
+    name: string;
+    priority: number;
+    default: boolean;
+  }[];
   members: {
     uuid: string;
+    rank: string;
     joined: number;
     expHistory: { [key: string]: number };
   }[];
 }
 
-export const getGuild = (name: string): Promise<Guild | undefined> => {
+export const getGuild = (name: string): Promise<HypixelGuild | undefined> => {
   invariant(process.env.HYPIXEL_API_KEY, "HYPIXEL_API_KEY env variable not defined");
   return new Promise((resolve, reject) => {
     axios

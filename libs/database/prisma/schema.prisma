@@ -138,6 +138,7 @@ enum ChannelType {
   GUILD_ONLY // Where inactivity accept/deny messages are sent if the user doesn't have thier DMs open
   GUILD_ANNOUNCEMENTS
   GUILD_STAFF
+  GEXP_LOGS
 }
 
 model Channel {
