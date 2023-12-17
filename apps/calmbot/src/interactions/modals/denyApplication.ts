@@ -1,16 +1,18 @@
 import { RegisteredModalSubmitInteraction } from "../../client/interactions";
 import { client as database } from "database";
-import { Colors, EmbedBuilder } from "discord.js";
+import { Colors, EmbedBuilder, escapeMarkdown } from "discord.js";
 import getChannel from "../../utils/getChannel";
+import { getProfileFromUUID } from "../../utils/apis/mojang";
 
 const interaction: RegisteredModalSubmitInteraction = {
   execute: async (client, interaction) => {
     const memberId = interaction.customId.split("_")[1];
     if (!memberId) return interaction.reply("Error");
 
-    await database.member.update({
+    const member = await database.member.update({
       where: { guildId_discordId: { discordId: memberId, guildId: interaction.guildId } },
       data: { guildApplicationChannelId: null },
+      select: { user: { select: { minecraftUuid: true } } },
     });
 
     await interaction.reply({ content: "Denied", ephemeral: true });
@@ -34,11 +36,16 @@ const interaction: RegisteredModalSubmitInteraction = {
     const channel = await getChannel("APPLICATIONS_LOG", interaction.guild);
     if (!channel?.isTextBased()) return;
 
+    let ign = "Couldn't get IGN";
+    if (member.user.minecraftUuid) {
+      ign = (await getProfileFromUUID(member.user.minecraftUuid))?.name ?? ign;
+    }
+
     const logEmbed = new EmbedBuilder()
       .setTitle("Denied")
       .setColor(Colors.Red)
       .addFields([
-        { name: "Applicant", value: `<@${memberId}> (${memberId})` },
+        { name: "Applicant", value: `<@${memberId}> (${memberId})\n${escapeMarkdown(ign)} (${member.user.minecraftUuid})` },
         { name: "Staff Member", value: `${interaction.user} (${interaction.user.id})` },
         { name: "Reason", value: reason },
       ]);
