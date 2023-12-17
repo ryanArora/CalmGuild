@@ -1,6 +1,7 @@
 import { RegisteredModalSubmitInteraction } from "../../client/interactions";
 import { client as database } from "database";
 import { Colors, EmbedBuilder } from "discord.js";
+import getChannel from "../../utils/getChannel";
 
 const interaction: RegisteredModalSubmitInteraction = {
   execute: async (client, interaction) => {
@@ -15,18 +16,34 @@ const interaction: RegisteredModalSubmitInteraction = {
     await interaction.reply({ content: "Denied", ephemeral: true });
     await interaction.channel?.delete();
 
+    const reason = interaction.fields.getTextInputValue("reason") ?? "N/A";
+
     client.users
       .fetch(memberId)
       .then((user) => {
         const embed = new EmbedBuilder();
         embed.setTitle("Application to calm denied");
-        embed.setDescription(`Sorry! Your application to calm has been denied for the following reason:\n\n${interaction.fields.getTextInputValue("reason") ?? "N/A"}`);
+        embed.setDescription(`Sorry! Your application to calm has been denied for the following reason:\n\n${reason}`);
         embed.setColor(Colors.Red);
 
         user.send({ embeds: [embed] });
       })
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       .catch(() => {});
+
+    const channel = await getChannel("APPLICATIONS_LOG", interaction.guild);
+    if (!channel?.isTextBased()) return;
+
+    const logEmbed = new EmbedBuilder()
+      .setTitle("Denied")
+      .setColor(Colors.Red)
+      .addFields([
+        { name: "Applicant", value: `<@${memberId}> (${memberId})` },
+        { name: "Staff Member", value: `${interaction.user} (${interaction.user.id})` },
+        { name: "Reason", value: reason },
+      ]);
+
+    channel.send({ embeds: [logEmbed] });
   },
   validator: (interaction) => interaction.customId.toLowerCase().startsWith("denyapplication"),
 };
