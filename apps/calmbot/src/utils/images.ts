@@ -10,8 +10,12 @@ export const imagesCommandExecutor = (images: string[]): CommandData["run"] => {
   };
 };
 
-export const Arlo = ["https://previews.123rf.com/images/mrhighsky/mrhighsky1508/mrhighsky150800248/44195385-3d-under-maintenance-sign-board.jpg"];
-export const Whiskey = ["https://previews.123rf.com/images/mrhighsky/mrhighsky1508/mrhighsky150800248/44195385-3d-under-maintenance-sign-board.jpg"];
+export const Arlo = [
+  "https://media.discordapp.net/attachments/501501905508237315/1186003965922521269/image.png?ex=6591ab44&is=657f3644&hm=1ac3e24755abbda9bec7320d5e02f54a8e459f8e011d74b44d04b04fd3ba99e1&=&format=webp&quality=lossless&width=880&height=660",
+];
+export const Whiskey = [
+  "https://media.discordapp.net/attachments/501501905508237315/1186003965922521269/image.png?ex=6591ab44&is=657f3644&hm=1ac3e24755abbda9bec7320d5e02f54a8e459f8e011d74b44d04b04fd3ba99e1&=&format=webp&quality=lossless&width=880&height=660",
+];
 
 export const Aida = [
   "https://media.discordapp.net/attachments/615218413626720257/1179947173526384720/IMG_3958.png?ex=657ba270&is=65692d70&hm=e465ba3abcde9446e4900a6faca82c77c97068151c8b6660b572dba7aff53432&=&format=webp&quality=lossless&width=588&height=682",
