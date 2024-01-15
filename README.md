@@ -4,7 +4,7 @@
 State of the art discord bot built to assist members of the calm discord community 
 
 ## Features
-- Automatic hndling of guild applications (hypixel guild)
+- Automatic handling of guild applications (hypixel guild)
 - Automatic handling of the waitlist
 - Easy utility commands for staff (such as being able to see the minecraft ign of all discord users in the guild)
 - Monthly Challenges System

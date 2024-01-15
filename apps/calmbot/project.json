@@ -63,7 +63,8 @@
       "executor": "nx-pm2-plugin:pm2-executor",
       "options": {
         "command": "calmbot:serve:production",
-        "name": "calmguild-bot"
+        "name": "calmguild-bot",
+        "autorestart": false
       }
     }
   },

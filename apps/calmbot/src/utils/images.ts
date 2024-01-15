@@ -11,10 +11,10 @@ export const imagesCommandExecutor = (images: string[]): CommandData["run"] => {
 };
 
 export const Arlo = [
-  "https://media.discordapp.net/attachments/501501905508237315/1186003965922521269/image.png?ex=6591ab44&is=657f3644&hm=1ac3e24755abbda9bec7320d5e02f54a8e459f8e011d74b44d04b04fd3ba99e1&=&format=webp&quality=lossless&width=880&height=660",
+  "https://media.discordapp.net/attachments/805506062127857707/1189710264375984158/image.png?ex=659f2706&is=658cb206&hm=3be877332a12e3a21bcdc59f08f08cb928ddd02424d6c060a929b4362d6c1207&=&format=webp&quality=lossless&width=506&height=453",
 ];
 export const Whiskey = [
-  "https://media.discordapp.net/attachments/501501905508237315/1186003965922521269/image.png?ex=6591ab44&is=657f3644&hm=1ac3e24755abbda9bec7320d5e02f54a8e459f8e011d74b44d04b04fd3ba99e1&=&format=webp&quality=lossless&width=880&height=660",
+  "https://media.discordapp.net/attachments/805506062127857707/1189710264375984158/image.png?ex=659f2706&is=658cb206&hm=3be877332a12e3a21bcdc59f08f08cb928ddd02424d6c060a929b4362d6c1207&=&format=webp&quality=lossless&width=506&height=453",
 ];
 
 export const Aida = [
