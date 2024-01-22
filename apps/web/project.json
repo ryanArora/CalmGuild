@@ -1,7 +1,0 @@
-{
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "name": "web",
-  "sourceRoot": "apps/web",
-  "projectType": "application",
-  "tags": []
-}
